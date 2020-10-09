@@ -60,8 +60,9 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static void main(String[] args) throws IOException {
 		try
 		{
-			app = new AppGameContainer(new HedgehogHavoc("Hedgehog Havoc", 800, 600));
-			app.setDisplayMode(800, 600, false);
+			// 23x23 grid
+			app = new AppGameContainer(new HedgehogHavoc("Hedgehog Havoc", 598, 598));
+			app.setDisplayMode(598, 598, false);
 			app.setShowFPS(false);
 			app.setVSync(true);
 			app.start();
