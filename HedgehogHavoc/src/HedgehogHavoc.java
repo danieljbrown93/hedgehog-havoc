@@ -1,6 +1,7 @@
 import java.io.IOException;
 
 import jig.Entity;
+import jig.ResourceManager;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -18,10 +19,19 @@ import org.newdawn.slick.state.StateBasedGame;
 public class HedgehogHavoc extends StateBasedGame {
 	// State IDs for each state.
 	public static final int PLAYINGSTATE = 0;
+	
+	// Resources
+	public static final String HEDGEHOG_IMG = "resource/hedgehog.png";
+	public static final String BADGER_IMG = "resource/badger.png";
+	public static final String BLOCK_MOVABLE_IMG = "resource/block_movable.png";
+	public static final String BLOCK_IMMOVABLE_IMG = "resource/block_immovable.png";
+	public static final String BUG_IMG = "resource/bug.png";
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
 	int fps;
+	
+	Hedgehog hedgehog;
 	
 	private static AppGameContainer app;
 
@@ -47,6 +57,16 @@ public class HedgehogHavoc extends StateBasedGame {
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
 		addState(new PlayingState());
+		
+		// Pre-loading all image resources
+		ResourceManager.loadImage(HEDGEHOG_IMG);
+		ResourceManager.loadImage(BADGER_IMG);
+		ResourceManager.loadImage(BLOCK_MOVABLE_IMG);
+		ResourceManager.loadImage(BLOCK_IMMOVABLE_IMG);
+		ResourceManager.loadImage(BUG_IMG);
+		
+		// Initialize entities
+		hedgehog = new Hedgehog(ScreenWidth / 2, ScreenHeight / 2);
 	}
 	
 	public void renderStats(Graphics g) {
@@ -60,7 +80,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static void main(String[] args) throws IOException {
 		try
 		{
-			// 23x23 grid
+			// 23x23 grid with 26x26 pixel images = 598x598 resolution
 			app = new AppGameContainer(new HedgehogHavoc("Hedgehog Havoc", 598, 598));
 			app.setDisplayMode(598, 598, false);
 			app.setShowFPS(false);
