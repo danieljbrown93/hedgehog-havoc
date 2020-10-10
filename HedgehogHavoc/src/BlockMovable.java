@@ -2,24 +2,18 @@ import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
 
-class Hedgehog extends Entity {
+class BlockMovable extends Entity {
 	private Vector velocity;
-	public int gridX;
-	public int gridY;
 	
 	/**
-	 * Create a new Hedgehog that will be controlled by the player.
-	 * @param x The initial X position within the grid.
-	 * @param y The initial Y position within the grid.
+	 * Create a new movable block that will be movable by the player.
+	 * @param x The initial X-position of the block.
+	 * @param y The initial Y-position of the block.
 	 */
-	public Hedgehog(final int x, final int y) {
-		super(
-				(x * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOG_IMG).getWidth() / 2),
-				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOG_IMG).getHeight() / 2));
-		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.HEDGEHOG_IMG));
+	public BlockMovable(final float x, final float y) {
+		super(x, y);
+		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.BLOCK_MOVABLE_IMG));
 		velocity = new Vector(0, 0);
-		gridX = x;
-		gridY = y;
 	}
 	
 	/**

@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 
 import jig.Entity;
 import jig.ResourceManager;
@@ -29,8 +30,10 @@ public class HedgehogHavoc extends StateBasedGame {
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
+	
 	int fps;
 	
+	ArrayList<ArrayList<String>> grid;
 	Hedgehog hedgehog;
 	
 	private static AppGameContainer app;
@@ -66,7 +69,18 @@ public class HedgehogHavoc extends StateBasedGame {
 		ResourceManager.loadImage(BUG_IMG);
 		
 		// Initialize entities
-		hedgehog = new Hedgehog(ScreenWidth / 2, ScreenHeight / 2);
+		grid = new ArrayList<ArrayList<String>>(23);
+		for (int i = 0; i < 23; i++) {
+			ArrayList<String> newList = new ArrayList<String>(23);
+			for (int j = 0; j < 23; j++) {
+				newList.add("G");
+			}
+			
+			grid.add(newList);
+		}
+		
+		hedgehog = new Hedgehog(11, 11);
+		grid.get(11).set(11, "H");
 	}
 	
 	public void renderStats(Graphics g) {
