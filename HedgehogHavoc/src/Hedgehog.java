@@ -6,6 +6,8 @@ class Hedgehog extends Entity {
 	private Vector velocity;
 	public int gridX;
 	public int gridY;
+	public int moveCount;
+	public String moveDir;
 	
 	/**
 	 * Create a new Hedgehog that will be controlled by the player.
@@ -14,12 +16,13 @@ class Hedgehog extends Entity {
 	 */
 	public Hedgehog(final int x, final int y) {
 		super(
-				(x * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOG_IMG).getWidth() / 2),
-				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOG_IMG).getHeight() / 2));
-		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.HEDGEHOG_IMG));
+				(x * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG).getWidth() / 2),
+				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG).getHeight() / 2));
+		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
 		velocity = new Vector(0, 0);
 		gridX = x;
 		gridY = y;
+		moveDir = "";
 	}
 	
 	/**

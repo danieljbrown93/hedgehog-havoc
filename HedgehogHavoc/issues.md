@@ -2,10 +2,10 @@
 
 - **[1]** Need a skeletal, executable game
 - **[2]** Add movable hedgehog
+- **[3]** Add block and make it movable by hedgehog
 
 # Open Issues
 
-- **[3]** Add block and make it movable by hedgehog
 - **[4]** Add badger that moves towards hedgehog (no Dijkstra's yet)
 - **[5]** Complete adding entire 1st level
 - **[6]** Add ability for badger to be caught when caught in the middle of 8 blocks
