@@ -4,6 +4,7 @@ import jig.Entity;
 import jig.ResourceManager;
 
 import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -21,7 +22,9 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static final int PLAYINGSTATE = 0;
 	
 	// Resources
-	public static final String HEDGEHOG_IMG = "resource/hedgehog.png";
+	public static final String BACKGROUND_IMG = "resource/background.png";
+	public static final String HEDGEHOGRIGHT_IMG = "resource/hedgehog_right.png";
+	public static final String HEDGEHOGLEFT_IMG = "resource/hedgehog_left.png";
 	public static final String BADGER_IMG = "resource/badger.png";
 	public static final String BLOCK_MOVABLE_IMG = "resource/block_movable.png";
 	public static final String BLOCK_IMMOVABLE_IMG = "resource/block_immovable.png";
@@ -29,8 +32,11 @@ public class HedgehogHavoc extends StateBasedGame {
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
-	int fps;
 	
+	int fps;
+	int currentLevel;
+	
+	Tile[][] grid;
 	Hedgehog hedgehog;
 	
 	private static AppGameContainer app;
@@ -59,18 +65,42 @@ public class HedgehogHavoc extends StateBasedGame {
 		addState(new PlayingState());
 		
 		// Pre-loading all image resources
-		ResourceManager.loadImage(HEDGEHOG_IMG);
+		ResourceManager.loadImage(BACKGROUND_IMG);
+		ResourceManager.loadImage(HEDGEHOGLEFT_IMG);
+		ResourceManager.loadImage(HEDGEHOGRIGHT_IMG);
 		ResourceManager.loadImage(BADGER_IMG);
 		ResourceManager.loadImage(BLOCK_MOVABLE_IMG);
 		ResourceManager.loadImage(BLOCK_IMMOVABLE_IMG);
 		ResourceManager.loadImage(BUG_IMG);
 		
 		// Initialize entities
-		hedgehog = new Hedgehog(ScreenWidth / 2, ScreenHeight / 2);
+		grid = new Tile[23][23];
+		for (int i = 0; i < 23; i++) {
+			for (int j = 0; j < 23; j++) {
+				grid[i][j] = new Tile(i, j);
+			}
+		}
+		
+		currentLevel = 1;
+		hedgehog = new Hedgehog(11, 11);
+		grid[11][11].setHedgehog(hedgehog);
+		grid[11][11].setIsHedgehog(true);
 	}
 	
 	public void renderStats(Graphics g) {
+		g.setColor(Color.black);
+		g.drawImage(ResourceManager.getImage(HedgehogHavoc.BACKGROUND_IMG), 0, 0);
 		g.drawString("FPS: " + fps, 10, 10);
+	}
+	
+	public void refreshLevel(Graphics g) {
+		for (int i = 0; i < 23; i++) {
+			for (int j = 0; j < 23; j++) {
+				if (grid[i][j].getIsBlockMovable()) {
+					grid[i][j].getBlockMovable().render(g);
+				}
+			}
+		}
 	}
 	
 	public void getFPS() {

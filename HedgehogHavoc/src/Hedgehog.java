@@ -4,16 +4,30 @@ import jig.Vector;
 
 class Hedgehog extends Entity {
 	private Vector velocity;
+	public int moveCount;
+	public String moveDir;
 	
 	/**
 	 * Create a new Hedgehog that will be controlled by the player.
-	 * @param x The initial X-position of the Hedgehog.
-	 * @param y The initial Y-position of the Hedgehog.
+	 * @param x The initial X position within the grid.
+	 * @param y The initial Y position within the grid.
 	 */
-	public Hedgehog(final float x, final float y) {
-		super(x, y);
-		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.HEDGEHOG_IMG));
+	public Hedgehog(final int x, final int y) {
+		super(
+				(x * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG).getWidth() / 2),
+				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG).getHeight() / 2));
+		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
 		velocity = new Vector(0, 0);
+		moveDir = "";
+	}
+	
+	public Hedgehog clone(Hedgehog hog) {
+		Hedgehog newHog = new Hedgehog(0, 0);
+		newHog.setPosition(hog.getPosition());
+		newHog.velocity = hog.velocity;
+		newHog.moveCount = hog.moveCount;
+		newHog.moveDir = hog.moveDir;
+		return newHog;
 	}
 	
 	/**
