@@ -8,10 +8,12 @@ class Tile extends Entity {
 	private int yPos;
 	private Hedgehog hedgehog;
 	private Badger badger;
+	private Bug bug;
 	private BlockMovable blockMovable;
 	private BlockImmovable blockImmovable;
 	private boolean isHedgehog;
 	private boolean isBadger;
+	private boolean isBug;
 	private boolean isBlockMovable;
 	private boolean isBlockImmovable;
 	private boolean isGround;
@@ -27,7 +29,9 @@ class Tile extends Entity {
 		isGround = true;
 		isHedgehog = false;
 		isBadger = false;
+		isBug = false;
 		isBlockMovable = false;
+		isBlockImmovable = false;
 	}
 	
 	@Override
@@ -40,6 +44,8 @@ class Tile extends Entity {
 			blockMovable.render(g);
 		} else if (isBlockImmovable) {
 			blockImmovable.render(g);
+		} else if (isBug) {
+			bug.render(g);
 		}
 	}
 	
@@ -91,6 +97,21 @@ class Tile extends Entity {
 		}
 	}
 	
+	public Bug getBug() {
+		return bug;
+	}
+	
+	public void setBug(Bug b) {
+		if (b == null) {
+			bug.removeImage(ResourceManager.getImage(HedgehogHavoc.BUG_IMG));
+			bug = null;
+			setIsBug(false);
+		} else {
+			bug = b;
+			setIsBug(true);
+		}
+	}
+	
 	public BlockMovable getBlockMovable() {
 		return blockMovable;
 	}
@@ -114,7 +135,7 @@ class Tile extends Entity {
 		if (block == null) {
 			blockImmovable.removeImage(ResourceManager.getImage(HedgehogHavoc.BLOCK_IMMOVABLE_IMG));
 			blockImmovable = null;
-			setIsBlockMovable(false);
+			setIsBlockImmovable(false);
 		} else {
 			blockImmovable = block;
 			setIsBlockImmovable(true);
@@ -129,12 +150,14 @@ class Tile extends Entity {
 		if (value) {
 			isHedgehog = true;
 			isBadger = false;
+			isBug = false;
 			isGround = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
 		} else {
 			isHedgehog = false;
 			isBadger = false;
+			isBug = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
 			isGround = true;
@@ -149,10 +172,34 @@ class Tile extends Entity {
 		if (value) {
 			isBadger = true;
 			isHedgehog = false;
+			isBug = false;
 			isGround = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
 		} else {
+			isBadger = false;
+			isHedgehog = false;
+			isBug = false;
+			isBlockMovable = false;
+			isBlockImmovable = false;
+			isGround = true;
+		}
+	}
+	
+	public boolean getIsBug() {
+		return isBug;
+	}
+	
+	public void setIsBug(boolean value) {
+		if (value) {
+			isBug = true;
+			isHedgehog = false;
+			isBadger = false;
+			isGround = false;
+			isBlockMovable = false;
+			isBlockImmovable = false;
+		} else {
+			isBug = false;
 			isBadger = false;
 			isHedgehog = false;
 			isBlockMovable = false;
@@ -171,12 +218,14 @@ class Tile extends Entity {
 			isBlockImmovable = false;
 			isHedgehog = false;
 			isBadger = false;
+			isBug = false;
 			isGround = false;
 		} else {
 			isBlockMovable = false;
 			isBlockImmovable = false;
 			isHedgehog = false;
 			isBadger = false;
+			isBug = false;
 			isGround = true;
 		}
 	}
@@ -191,12 +240,14 @@ class Tile extends Entity {
 			isBlockMovable = false;
 			isHedgehog = false;
 			isBadger = false;
+			isBug = false;
 			isGround = false;
 		} else {
 			isBlockImmovable = false;
 			isBlockMovable = false;
 			isHedgehog = false;
 			isBadger = false;
+			isBug = false;
 			isGround = true;
 		}
 	}
@@ -210,12 +261,14 @@ class Tile extends Entity {
 			isGround = true;
 			isHedgehog = false;
 			isBadger = false;
+			isBug = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
 		} else {
 			isGround = false;
 			isHedgehog = false;
 			isBadger = false;
+			isBug = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
 		}
