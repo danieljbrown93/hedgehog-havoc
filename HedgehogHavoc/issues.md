@@ -4,10 +4,10 @@
 - **[2]** Add movable hedgehog
 - **[3]** Add block and make it movable by hedgehog
 - **[4]** Add badger that moves towards hedgehog (no Dijkstra's yet)
+- **[5]** Add immovable block
 
 # Open Issues
 
-- **[5]** Add immovable block
 - **[6]** Complete adding entire 1st level
 - **[7]** Add ability for badger to be caught when caught in the middle of 8 blocks
 - **[8]** Add Timer System, have more badgers spawn if timer expires, have timer extend if all badgers are caught

@@ -106,6 +106,13 @@ public class HedgehogHavoc extends StateBasedGame {
 				}
 			}
 			
+			for (int i = 0; i < 23; i++) {
+				grid[i][0].setBlockImmovable(new BlockImmovable(i, 0));
+				grid[0][i].setBlockImmovable(new BlockImmovable(0, i));
+				grid[22][i].setBlockImmovable(new BlockImmovable(22, i));
+				grid[i][22].setBlockImmovable(new BlockImmovable(i, 22));
+			}
+			
 			grid[4][3].setBadger(new Badger(4, 3));
 		}
 	}
