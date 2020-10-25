@@ -7,8 +7,10 @@ class Tile extends Entity {
 	private int xPos;
 	private int yPos;
 	private Hedgehog hedgehog;
+	private Badger badger;
 	private BlockMovable blockMovable;
 	private boolean isHedgehog;
+	private boolean isBadger;
 	private boolean isBlockMovable;
 	private boolean isGround;
 	
@@ -22,6 +24,7 @@ class Tile extends Entity {
 		yPos = y;
 		isGround = true;
 		isHedgehog = false;
+		isBadger = false;
 		isBlockMovable = false;
 	}
 	
@@ -29,6 +32,8 @@ class Tile extends Entity {
 	public void render(Graphics g) {
 		if (isHedgehog) {
 			hedgehog.render(g);
+		} else if (isBadger) {
+			badger.render(g);
 		} else if (isBlockMovable) {
 			blockMovable.render(g);
 		}
@@ -66,6 +71,22 @@ class Tile extends Entity {
 		}
 	}
 	
+	public Badger getBadger() {
+		return badger;
+	}
+	
+	public void setBadger(Badger b) {
+		if (b == null) {
+			badger.removeImage(ResourceManager.getImage(HedgehogHavoc.BADGERLEFT_IMG));
+			badger.removeImage(ResourceManager.getImage(HedgehogHavoc.BADGERRIGHT_IMG));
+			badger = null;
+			setIsBadger(false);
+		} else {
+			badger = b;
+			setIsBadger(true);
+		}
+	}
+	
 	public BlockMovable getBlockMovable() {
 		return blockMovable;
 	}
@@ -88,9 +109,29 @@ class Tile extends Entity {
 	public void setIsHedgehog(boolean value) {
 		if (value) {
 			isHedgehog = true;
+			isBadger = false;
 			isGround = false;
 			isBlockMovable = false;
 		} else {
+			isHedgehog = false;
+			isBadger = false;
+			isBlockMovable = false;
+			isGround = true;
+		}
+	}
+	
+	public boolean getIsBadger() {
+		return isBadger;
+	}
+	
+	public void setIsBadger(boolean value) {
+		if (value) {
+			isBadger = true;
+			isHedgehog = false;
+			isGround = false;
+			isBlockMovable = false;
+		} else {
+			isBadger = false;
 			isHedgehog = false;
 			isBlockMovable = false;
 			isGround = true;
@@ -105,10 +146,12 @@ class Tile extends Entity {
 		if (value) {
 			isBlockMovable = true;
 			isHedgehog = false;
+			isBadger = false;
 			isGround = false;
 		} else {
 			isBlockMovable = false;
 			isHedgehog = false;
+			isBadger = false;
 			isGround = true;
 		}
 	}
@@ -121,10 +164,12 @@ class Tile extends Entity {
 		if (value) {
 			isGround = true;
 			isHedgehog = false;
+			isBadger = false;
 			isBlockMovable = false;
 		} else {
 			isGround = false;
 			isHedgehog = false;
+			isBadger = false;
 			isBlockMovable = false;
 		}
 	}
@@ -145,6 +190,31 @@ class Tile extends Entity {
 					hedgehog.setY(hedgehog.getY() - 2);
 				} else if (hedgehog.moveDir.equals("D")) {
 					hedgehog.setY(hedgehog.getY() + 2);
+				}
+			}
+		} else if (isBadger) {
+			if (badger.moveCount > 0) {
+				badger.moveCount -= 1;
+				if (badger.moveDir.equals("R")) {
+					badger.setX(badger.getX() + 1);
+				} else if (badger.moveDir.equals("L")) {
+					badger.setX(badger.getX() - 1);
+				} else if (badger.moveDir.equals("U")) {
+					badger.setY(badger.getY() - 1);
+				} else if (badger.moveDir.equals("D")) {
+					badger.setY(badger.getY() + 1);
+				} else if (badger.moveDir.equals("DL")) {
+					badger.setX(badger.getX() - 1);
+					badger.setY(badger.getY() + 1);
+				} else if (badger.moveDir.equals("DR")) {
+					badger.setX(badger.getX() + 1);
+					badger.setY(badger.getY() + 1);
+				} else if (badger.moveDir.equals("UR")) {
+					badger.setX(badger.getX() + 1);
+					badger.setY(badger.getY() - 1);
+				} else if (badger.moveDir.equals("UL")) {
+					badger.setX(badger.getX() - 1);
+					badger.setY(badger.getY() - 1);
 				}
 			}
 		} else if (isBlockMovable) {
