@@ -7,14 +7,14 @@
 
 # Open Issues
 
-- **[5]** Complete adding entire 1st level
-- **[6]** Add ability for badger to be caught when caught in the middle of 8 blocks
-- **[7]** Add Timer System, have more badgers spawn if timer expires, have timer extend if all badgers are caught
-- **[8]** Add extra lives system. Have hedgehog lose life if it collides with a badger
-- **[9]** Add scoring system, increasing points if badgers are caught
-- **[10]** Add a pause menu
-- **[11]** Add Dijkstra's Algorithm to the badgers
-- **[12]** Add immovable block
+- **[5]** Add immovable block
+- **[6]** Complete adding entire 1st level
+- **[7]** Add ability for badger to be caught when caught in the middle of 8 blocks
+- **[8]** Add Timer System, have more badgers spawn if timer expires, have timer extend if all badgers are caught
+- **[9]** Add extra lives system. Have hedgehog lose life if it collides with a badger
+- **[10]** Add scoring system, increasing points if badgers are caught
+- **[11]** Add a pause menu
+- **[12]** Add Dijkstra's Algorithm to the badgers
 - **[13]** Add levels 2 and 3, make badgers faster
 - **[14]** Add hole entity
 - **[15]** Add levels 4 and 5
