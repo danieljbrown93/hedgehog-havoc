@@ -33,12 +33,14 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		HedgehogHavoc hh = (HedgehogHavoc)game;
-		hh.renderStats(g);
+		g.drawImage(ResourceManager.getImage(HedgehogHavoc.BACKGROUND_IMG), 0, 0);
 		for (int i = 0; i < 23; i++) {
 			for (int j = 0; j < 23; j++) {
 				hh.grid[i][j].render(g);
 			}
 		}
+		
+		hh.renderStats(g);
 	}
 
 	@Override
@@ -54,6 +56,9 @@ class PlayingState extends BasicGameState {
 				}
 			} else if (hh.grid[hedgehogX + 1][hedgehogY].getIsGround()) {
 				moveRight(hh);
+			} else if (hh.grid[hedgehogX + 1][hedgehogY].getIsBug()) {
+				hh.score += 100;
+				moveRight(hh);
 			}
 		} else if (input.isKeyDown(Input.KEY_LEFT) && hedgehogX > 0 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
 			if (hh.grid[hedgehogX - 1][hedgehogY].getIsBlockMovable()) {
@@ -61,6 +66,9 @@ class PlayingState extends BasicGameState {
 					moveLeft(hh);
 				}
 			} else if (hh.grid[hedgehogX - 1][hedgehogY].getIsGround()) {
+				moveLeft(hh);
+			} else if (hh.grid[hedgehogX - 1][hedgehogY].getIsBug()) {
+				hh.score += 100;
 				moveLeft(hh);
 			}
 		} else if (input.isKeyDown(Input.KEY_UP) && hedgehogY > 0 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
@@ -70,6 +78,9 @@ class PlayingState extends BasicGameState {
 				}
 			} else if (hh.grid[hedgehogX][hedgehogY - 1].getIsGround()) {
 				moveUp(hh);
+			} else if (hh.grid[hedgehogX][hedgehogY - 1].getIsBug()) {
+				hh.score += 100;
+				moveUp(hh);
 			}
 		} else if (input.isKeyDown(Input.KEY_DOWN) && hedgehogY < 22 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
 			if (hh.grid[hedgehogX][hedgehogY + 1].getIsBlockMovable()) {
@@ -77,6 +88,9 @@ class PlayingState extends BasicGameState {
 					moveDown(hh);
 				}
 			} else if (hh.grid[hedgehogX][hedgehogY + 1].getIsGround()) {
+				moveDown(hh);
+			} else if (hh.grid[hedgehogX][hedgehogY + 1].getIsBug()) {
+				hh.score += 100;
 				moveDown(hh);
 			}
 		}
@@ -300,7 +314,7 @@ class PlayingState extends BasicGameState {
 			} else {
 				return false;
 			}
-		} else if (hh.grid[x][y].getIsGround()) {
+		} else if (hh.grid[x][y].getIsGround() || hh.grid[x][y].getIsBug()) {
 			return true;
 		} else {
 			return false;

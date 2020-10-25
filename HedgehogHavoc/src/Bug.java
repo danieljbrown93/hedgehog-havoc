@@ -12,6 +12,7 @@ class Bug extends Entity {
 				(x * 26f) + (ResourceManager.getImage(HedgehogHavoc.BUG_IMG).getWidth() / 2),
 				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.BUG_IMG).getHeight() / 2));
 		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.BUG_IMG));
+		antiAliasing = false;
 	}
 
 	public void update(final int delta) {

@@ -19,6 +19,7 @@ class Hedgehog extends Entity {
 		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
 		velocity = new Vector(0, 0);
 		moveDir = "";
+		antiAliasing = false;
 	}
 	
 	public Hedgehog clone(Hedgehog hog) {
