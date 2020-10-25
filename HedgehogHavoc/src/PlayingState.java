@@ -52,6 +52,10 @@ class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		HedgehogHavoc hh = (HedgehogHavoc)game;
 		hh.getFPS();
+		if (hh.lives <= 0) {
+			hh.restartGame();
+			game.enterState(HedgehogHavoc.PLAYINGSTATE);
+		}
 		
 		if (input.isKeyDown(Input.KEY_RIGHT) && hedgehogX < 22 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
 			if (hh.grid[hedgehogX + 1][hedgehogY].getIsBlockMovable()) {
@@ -63,6 +67,9 @@ class PlayingState extends BasicGameState {
 			} else if (hh.grid[hedgehogX + 1][hedgehogY].getIsBug()) {
 				hh.score += 100;
 				moveRight(hh);
+			} else if (hh.grid[hedgehogX + 1][hedgehogY].getIsBadger()) {
+				hh.lives -= 1;
+				respawnHedgehog(hh);
 			}
 		} else if (input.isKeyDown(Input.KEY_LEFT) && hedgehogX > 0 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
 			if (hh.grid[hedgehogX - 1][hedgehogY].getIsBlockMovable()) {
@@ -74,6 +81,9 @@ class PlayingState extends BasicGameState {
 			} else if (hh.grid[hedgehogX - 1][hedgehogY].getIsBug()) {
 				hh.score += 100;
 				moveLeft(hh);
+			} else if (hh.grid[hedgehogX - 1][hedgehogY].getIsBadger()) {
+				hh.lives -= 1;
+				respawnHedgehog(hh);
 			}
 		} else if (input.isKeyDown(Input.KEY_UP) && hedgehogY > 0 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
 			if (hh.grid[hedgehogX][hedgehogY - 1].getIsBlockMovable()) {
@@ -85,6 +95,9 @@ class PlayingState extends BasicGameState {
 			} else if (hh.grid[hedgehogX][hedgehogY - 1].getIsBug()) {
 				hh.score += 100;
 				moveUp(hh);
+			} else if (hh.grid[hedgehogX][hedgehogY - 1].getIsBadger()) {
+				hh.lives -= 1;
+				respawnHedgehog(hh);
 			}
 		} else if (input.isKeyDown(Input.KEY_DOWN) && hedgehogY < 22 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
 			if (hh.grid[hedgehogX][hedgehogY + 1].getIsBlockMovable()) {
@@ -96,6 +109,9 @@ class PlayingState extends BasicGameState {
 			} else if (hh.grid[hedgehogX][hedgehogY + 1].getIsBug()) {
 				hh.score += 100;
 				moveDown(hh);
+			} else if (hh.grid[hedgehogX][hedgehogY + 1].getIsBadger()) {
+				hh.lives -= 1;
+				respawnHedgehog(hh);
 			}
 		}
 		
@@ -112,6 +128,52 @@ class PlayingState extends BasicGameState {
 		if (hh.second <= 0 || badgerCount <= 0) {
 			hh.second = 60;
 			spawnBadger(hh);
+		}
+	}
+	
+	private void respawnHedgehog(HedgehogHavoc hh) {
+		for (int j = 11; j < 23; j++) {
+			for (int i = 11; i < 23; i++) {
+				if (hh.grid[i][j].getIsGround()) {
+					// Checking to make sure we're not respawning directly next to a badger.
+					if (!hh.grid[i - 1][j].getIsBadger() &&
+							!hh.grid[i + 1][j].getIsBadger() &&
+							!hh.grid[i][j - 1].getIsBadger() &&
+							!hh.grid[i][j + 1].getIsBadger() &&
+							!hh.grid[i - 1][j - 1].getIsBadger() &&
+							!hh.grid[i - 1][j + 1].getIsBadger() &&
+							!hh.grid[i + 1][j - 1].getIsBadger() &&
+							!hh.grid[i + 1][j + 1].getIsBadger()) {
+						hh.grid[hedgehogX][hedgehogY].setHedgehog(null);
+						hh.grid[i][j].setHedgehog(new Hedgehog(i, j, hh.HUDHeight));
+						hedgehogX = i;
+						hedgehogY = j;
+						return;
+					}
+				}
+			}
+		}
+		
+		for (int j = 10; j > 0; j--) {
+			for (int i = 10; i > 0; i--) {
+				if (hh.grid[i][j].getIsGround()) {
+					// Checking to make sure we're not respawning directly next to a badger.
+					if (!hh.grid[i - 1][j].getIsBadger() &&
+							!hh.grid[i + 1][j].getIsBadger() &&
+							!hh.grid[i][j - 1].getIsBadger() &&
+							!hh.grid[i][j + 1].getIsBadger() &&
+							!hh.grid[i - 1][j - 1].getIsBadger() &&
+							!hh.grid[i - 1][j + 1].getIsBadger() &&
+							!hh.grid[i + 1][j - 1].getIsBadger() &&
+							!hh.grid[i + 1][j + 1].getIsBadger()) {
+						hh.grid[hedgehogX][hedgehogY].setHedgehog(null);
+						hh.grid[i][j].setHedgehog(new Hedgehog(i, j, hh.HUDHeight));
+						hedgehogX = i;
+						hedgehogY = j;
+						return;
+					}
+				}
+			}
 		}
 	}
 	
@@ -152,14 +214,22 @@ class PlayingState extends BasicGameState {
 	}
 	
 	private void pathToHedgehog(HedgehogHavoc hh, int badgerX, int badgerY) {
-		double xDelta = Math.abs(badgerX - hedgehogX);
-		double yDelta = Math.abs(badgerY - hedgehogY);
-		boolean canMoveLeft = badgerX > 0 && hh.grid[badgerX - 1][badgerY].getIsGround();
-		boolean canMoveRight = badgerX < 22 && hh.grid[badgerX + 1][badgerY].getIsGround();
-		boolean canMoveUp = badgerY > 0 && hh.grid[badgerX][badgerY - 1].getIsGround();
-		boolean canMoveDown = badgerY < 22 && hh.grid[badgerX][badgerY + 1].getIsGround();
+		boolean canMoveLeft = badgerX > 0 && (hh.grid[badgerX - 1][badgerY].getIsGround() || hh.grid[badgerX - 1][badgerY].getIsHedgehog());
+		boolean canMoveRight = badgerX < 22 && (hh.grid[badgerX + 1][badgerY].getIsGround() || hh.grid[badgerX + 1][badgerY].getIsHedgehog());
+		boolean canMoveUp = badgerY > 0 && (hh.grid[badgerX][badgerY - 1].getIsGround() || hh.grid[badgerX][badgerY - 1].getIsHedgehog());
+		boolean canMoveDown = badgerY < 22 && (hh.grid[badgerX][badgerY + 1].getIsGround() || hh.grid[badgerX][badgerY + 1].getIsHedgehog());
 		
-		if (xDelta < yDelta) {
+		if (badgerX == hedgehogX && badgerY != hedgehogY) {
+			if (badgerY < hedgehogY && canMoveDown) {
+				// Move down.
+				moveBadgerDown(hh, badgerX, badgerY);
+				return;
+			} else if (badgerY > hedgehogY && canMoveUp) {
+				// Move up.
+				moveBadgerUp(hh, badgerX, badgerY);
+				return;
+			}
+		} else if (badgerY == hedgehogY && badgerX != hedgehogX) {
 			if (badgerX < hedgehogX && canMoveRight) {
 				// Move right.
 				moveBadgerRight(hh, badgerX, badgerY);
@@ -169,16 +239,24 @@ class PlayingState extends BasicGameState {
 				moveBadgerLeft(hh, badgerX, badgerY);
 				return;
 			}
-		}
-
-		if (badgerY < hedgehogY && canMoveDown) {
-			// Move down.
-			moveBadgerDown(hh, badgerX, badgerY);
-			return;
-		} else if (badgerY > hedgehogY && canMoveUp) {
-			// Move up.
-			moveBadgerUp(hh, badgerX, badgerY);
-			return;
+		} else {
+			if (badgerX < hedgehogX && canMoveRight) {
+				// Move right.
+				moveBadgerRight(hh, badgerX, badgerY);
+				return;
+			} else if (badgerX > hedgehogX && canMoveLeft) {
+				// Move left.
+				moveBadgerLeft(hh, badgerX, badgerY);
+				return;
+			} else if (badgerY < hedgehogY && canMoveDown) {
+				// Move down.
+				moveBadgerDown(hh, badgerX, badgerY);
+				return;
+			} else if (badgerY > hedgehogY && canMoveUp) {
+				// Move up.
+				moveBadgerUp(hh, badgerX, badgerY);
+				return;
+			}
 		}
 		
 		// We will only reach this point if the badger couldn't make an optimal move.
@@ -241,6 +319,11 @@ class PlayingState extends BasicGameState {
 		hh.grid[x][y].getBadger().removeImage(ResourceManager.getImage(HedgehogHavoc.BADGERLEFT_IMG));
 		hh.grid[x][y].getBadger().moveCount = (int) hh.grid[x][y].getBadger().getCoarseGrainedWidth();
 		hh.grid[x][y].getBadger().moveDir = "R";
+		if (hh.grid[x + 1][y].getIsHedgehog()) {
+			hh.lives -= 1;
+			respawnHedgehog(hh);
+		}
+		
 		hh.grid[x + 1][y].setBadger(hh.grid[x][y].getBadger().clone(hh.grid[x][y].getBadger()));
 		hh.grid[x][y].setBadger(null);
 	}
@@ -250,6 +333,11 @@ class PlayingState extends BasicGameState {
 		hh.grid[x][y].getBadger().removeImage(ResourceManager.getImage(HedgehogHavoc.BADGERRIGHT_IMG));
 		hh.grid[x][y].getBadger().moveCount = (int) hh.grid[x][y].getBadger().getCoarseGrainedWidth();
 		hh.grid[x][y].getBadger().moveDir = "L";
+		if (hh.grid[x - 1][y].getIsHedgehog()) {
+			hh.lives -= 1;
+			respawnHedgehog(hh);
+		}
+		
 		hh.grid[x - 1][y].setBadger(hh.grid[x][y].getBadger().clone(hh.grid[x][y].getBadger()));
 		hh.grid[x][y].setBadger(null);
 	}
@@ -257,6 +345,11 @@ class PlayingState extends BasicGameState {
 	private void moveBadgerDown(HedgehogHavoc hh, int x, int y) {
 		hh.grid[x][y].getBadger().moveCount = (int) hh.grid[x][y].getBadger().getCoarseGrainedHeight();
 		hh.grid[x][y].getBadger().moveDir = "D";
+		if (hh.grid[x][y + 1].getIsHedgehog()) {
+			hh.lives -= 1;
+			respawnHedgehog(hh);
+		}
+		
 		hh.grid[x][y + 1].setBadger(hh.grid[x][y].getBadger().clone(hh.grid[x][y].getBadger()));
 		hh.grid[x][y].setBadger(null);
 	}
@@ -264,6 +357,11 @@ class PlayingState extends BasicGameState {
 	private void moveBadgerUp(HedgehogHavoc hh, int x, int y) {
 		hh.grid[x][y].getBadger().moveCount = (int) hh.grid[x][y].getBadger().getCoarseGrainedHeight();
 		hh.grid[x][y].getBadger().moveDir = "U";
+		if (hh.grid[x][y - 1].getIsHedgehog()) {
+			hh.lives -= 1;
+			respawnHedgehog(hh);
+		}
+		
 		hh.grid[x][y - 1].setBadger(hh.grid[x][y].getBadger().clone(hh.grid[x][y].getBadger()));
 		hh.grid[x][y].setBadger(null);
 	}

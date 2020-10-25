@@ -7,10 +7,10 @@
 - **[5]** Add immovable block
 - **[6]** Add ability for badger to be caught when caught in the middle of 8 blocks
 - **[7]** Add Timer System, have more badgers spawn if timer expires, have timer extend if all badgers are caught
+- **[8]** Add extra lives system. Have hedgehog lose life if it collides with a badger
 
 # Open Issues
 
-- **[8]** Add extra lives system. Have hedgehog lose life if it collides with a badger
 - **[9]** Add scoring system, increasing points if badgers are caught
 - **[10]** Add a pause menu
 - **[11]** Add Dijkstra's Algorithm to the badgers
