@@ -39,6 +39,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	
 	int fps;
 	int score;
+	int lives;
 	int currentLevel;
 	int second;
 	long previousTime;
@@ -96,6 +97,7 @@ public class HedgehogHavoc extends StateBasedGame {
 		second = 60;
 		currentLevel = 1;
 		score = 0;
+		lives = 3;
 		hedgehog = new Hedgehog(11, 11, HUDHeight);
 		grid[11][11].setHedgehog(hedgehog);
 		grid[11][11].setIsHedgehog(true);
@@ -114,6 +116,7 @@ public class HedgehogHavoc extends StateBasedGame {
 		g.drawString("FPS: " + fps, 10, 10);
 		g.drawString("Score: " + score, 100, 10);
 		g.drawString("Timer: " + String.format("%02d", second), 300, 10);
+		g.drawString("Lives: " + lives, 500, 10);
 	}
 	
 	public void setLevel() {
@@ -136,6 +139,26 @@ public class HedgehogHavoc extends StateBasedGame {
 			
 			grid[4][3].setBadger(new Badger(4, 3, HUDHeight));
 		}
+	}
+	
+	public void restartGame() {
+		// Initialize entities
+		grid = new Tile[23][23];
+		for (int i = 0; i < 23; i++) {
+			for (int j = 0; j < 23; j++) {
+				grid[i][j] = new Tile(i, j);
+			}
+		}
+		
+		Date tempTime = new Date();
+		previousTime = tempTime.getTime();
+		second = 60;
+		currentLevel = 1;
+		score = 0;
+		lives = 3;
+		hedgehog = new Hedgehog(11, 11, HUDHeight);
+		grid[11][11].setHedgehog(hedgehog);
+		grid[11][11].setIsHedgehog(true);
 	}
 	
 	public void getFPS() {
