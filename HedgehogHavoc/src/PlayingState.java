@@ -126,6 +126,12 @@ class PlayingState extends BasicGameState {
 		}
 		
 		if (hh.second <= 0 || badgerCount <= 0) {
+			if (hh.second <= 0) {
+				hh.score -= 10; // Penalty for letting timer run out.
+				if (hh.score < 0) {
+					hh.score = 0;
+				}
+			}
 			hh.second = 60;
 			spawnBadger(hh);
 		}
@@ -389,6 +395,7 @@ class PlayingState extends BasicGameState {
 				hh.grid[x][y].setBug(new Bug(x, y, hh.HUDHeight));
 				badgerCount -= 1;
 				caughtBadgers -= 1;
+				hh.score += 10;
 			} else if (!hh.grid[x][y].getBadger().caught) {
 				hh.grid[x][y].getBadger().caught = true;
 				caughtBadgers += 1;
