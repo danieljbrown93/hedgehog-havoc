@@ -91,14 +91,9 @@ class PlayingState extends BasicGameState {
 			}
 		}
 	}
-
-	@Override
-	public int getID() {
-		return HedgehogHavoc.PLAYINGSTATE;
-	}
 	
 	private void moveRight(HedgehogHavoc hh) {
-		hh.grid[hedgehogX][hedgehogY].getHedgehog().addImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGRIGHT_IMG));
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGRIGHT_IMG));
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().removeImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = (int) hh.grid[hedgehogX][hedgehogY].getHedgehog().getCoarseGrainedWidth();
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveDir = "R";
@@ -176,6 +171,8 @@ class PlayingState extends BasicGameState {
 				moveBadgerUp(hh, badgerX, badgerY);
 			} else if (canMoveDown) {
 				moveBadgerDown(hh, badgerX, badgerY);
+			} else {
+				trappedBadger(hh, badgerX, badgerY);
 			}
 		} else if (rand >= 25 && rand < 50) {
 			if (canMoveRight) {
@@ -186,6 +183,8 @@ class PlayingState extends BasicGameState {
 				moveBadgerDown(hh, badgerX, badgerY);
 			} else if (canMoveLeft) {
 				moveBadgerLeft(hh, badgerX, badgerY);
+			} else {
+				trappedBadger(hh, badgerX, badgerY);
 			}
 		} else if (rand >= 50 && rand < 75) {
 			if (canMoveUp) {
@@ -196,6 +195,8 @@ class PlayingState extends BasicGameState {
 				moveBadgerLeft(hh, badgerX, badgerY);
 			} else if (canMoveRight) {
 				moveBadgerRight(hh, badgerX, badgerY);
+			} else {
+				trappedBadger(hh, badgerX, badgerY);
 			}
 		} else if (rand >= 75 && rand <= 100) {
 			if (canMoveDown) {
@@ -206,11 +207,15 @@ class PlayingState extends BasicGameState {
 				moveBadgerRight(hh, badgerX, badgerY);
 			} else if (canMoveUp) {
 				moveBadgerUp(hh, badgerX, badgerY);
+			} else {
+				trappedBadger(hh, badgerX, badgerY);
 			}
 		}
 	}
 	
 	private void moveBadgerRight(HedgehogHavoc hh, int x, int y) {
+		hh.grid[x][y].getBadger().addImage(ResourceManager.getImage(HedgehogHavoc.BADGERRIGHT_IMG));
+		hh.grid[x][y].getBadger().removeImage(ResourceManager.getImage(HedgehogHavoc.BADGERLEFT_IMG));
 		hh.grid[x][y].getBadger().moveCount = (int) hh.grid[x][y].getBadger().getCoarseGrainedWidth();
 		hh.grid[x][y].getBadger().moveDir = "R";
 		hh.grid[x + 1][y].setBadger(hh.grid[x][y].getBadger().clone(hh.grid[x][y].getBadger()));
@@ -218,6 +223,8 @@ class PlayingState extends BasicGameState {
 	}
 	
 	private void moveBadgerLeft(HedgehogHavoc hh, int x, int y) {
+		hh.grid[x][y].getBadger().addImage(ResourceManager.getImage(HedgehogHavoc.BADGERLEFT_IMG));
+		hh.grid[x][y].getBadger().removeImage(ResourceManager.getImage(HedgehogHavoc.BADGERRIGHT_IMG));
 		hh.grid[x][y].getBadger().moveCount = (int) hh.grid[x][y].getBadger().getCoarseGrainedWidth();
 		hh.grid[x][y].getBadger().moveDir = "L";
 		hh.grid[x - 1][y].setBadger(hh.grid[x][y].getBadger().clone(hh.grid[x][y].getBadger()));
@@ -236,6 +243,21 @@ class PlayingState extends BasicGameState {
 		hh.grid[x][y].getBadger().moveDir = "U";
 		hh.grid[x][y - 1].setBadger(hh.grid[x][y].getBadger().clone(hh.grid[x][y].getBadger()));
 		hh.grid[x][y].setBadger(null);
+	}
+	
+	private void trappedBadger(HedgehogHavoc hh, int x, int y) {
+		boolean checkLeft = x == 0 || (!hh.grid[x - 1][y].getIsGround() && !hh.grid[x - 1][y].getIsHedgehog());
+		boolean checkRight = x == 22 || (!hh.grid[x + 1][y].getIsGround() && !hh.grid[x + 1][y].getIsHedgehog());
+		boolean checkUp = y == 0 || (!hh.grid[x][y - 1].getIsGround() && !hh.grid[x][y - 1].getIsHedgehog());
+		boolean checkDown = y == 23 || (!hh.grid[x][y + 1].getIsGround() && !hh.grid[x][y + 1].getIsHedgehog());
+		boolean checkTopLeft = (x == 0 && y == 0) || (!hh.grid[x - 1][y - 1].getIsGround() && !hh.grid[x - 1][y - 1].getIsHedgehog());
+		boolean checkTopRight = (x == 22 && y == 0) || (!hh.grid[x + 1][y - 1].getIsGround() && !hh.grid[x + 1][y - 1].getIsHedgehog());
+		boolean checkBottomLeft = (x == 0 && y == 22) || (!hh.grid[x - 1][y + 1].getIsGround() && !hh.grid[x - 1][y + 1].getIsHedgehog());
+		boolean checkBottomRight = (x == 22 && y == 22) || (!hh.grid[x + 1][y + 1].getIsGround() && !hh.grid[x + 1][y + 1].getIsHedgehog());
+		if (checkLeft && checkRight && checkUp && checkDown && checkTopLeft && checkTopRight && checkBottomLeft && checkBottomRight) {
+			hh.grid[x][y].setBadger(null);
+			hh.grid[x][y].setBug(new Bug(x, y));
+		}
 	}
 	
 	private boolean moveBlock(HedgehogHavoc hh, int x, int y, String direction) {
@@ -283,5 +305,10 @@ class PlayingState extends BasicGameState {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public int getID() {
+		return HedgehogHavoc.PLAYINGSTATE;
 	}
 }
