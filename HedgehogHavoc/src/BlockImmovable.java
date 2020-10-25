@@ -12,5 +12,6 @@ class BlockImmovable extends Entity {
 				(x * 26f) + (ResourceManager.getImage(HedgehogHavoc.BLOCK_IMMOVABLE_IMG).getWidth() / 2),
 				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.BLOCK_IMMOVABLE_IMG).getHeight() / 2));
 		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.BLOCK_IMMOVABLE_IMG));
+		antiAliasing = false;
 	}
 }

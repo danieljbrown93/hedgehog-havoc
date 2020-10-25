@@ -35,6 +35,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	public final int ScreenHeight;
 	
 	int fps;
+	int score;
 	int currentLevel;
 	
 	Tile[][] grid;
@@ -84,6 +85,7 @@ public class HedgehogHavoc extends StateBasedGame {
 		}
 		
 		currentLevel = 1;
+		score = 0;
 		hedgehog = new Hedgehog(11, 11);
 		grid[11][11].setHedgehog(hedgehog);
 		grid[11][11].setIsHedgehog(true);
@@ -91,8 +93,8 @@ public class HedgehogHavoc extends StateBasedGame {
 	
 	public void renderStats(Graphics g) {
 		g.setColor(Color.black);
-		g.drawImage(ResourceManager.getImage(HedgehogHavoc.BACKGROUND_IMG), 0, 0);
 		g.drawString("FPS: " + fps, 10, 10);
+		g.drawString("Score: " + score, 100, 10);
 	}
 	
 	public void setLevel() {

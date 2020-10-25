@@ -16,6 +16,7 @@ class Badger extends Entity {
 				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.BADGERRIGHT_IMG).getHeight() / 2));
 		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.BADGERRIGHT_IMG));
 		moveDir = "";
+		antiAliasing = false;
 	}
 	
 	public Badger clone(Badger badger) {

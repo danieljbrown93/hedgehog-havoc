@@ -20,6 +20,7 @@ class BlockMovable extends Entity {
 		velocity = new Vector(0, 0);
 		moveCount = 0;
 		moveDir = "";
+		antiAliasing = false;
 	}
 	
 	public BlockMovable clone(BlockMovable block) {
