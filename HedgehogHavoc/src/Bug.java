@@ -7,10 +7,10 @@ class Bug extends Entity {
 	 * @param x The initial X-position of the block.
 	 * @param y The initial Y-position of the block.
 	 */
-	public Bug(final int x, final int y) {
+	public Bug(final int x, final int y, final int HUDOffset) {
 		super(
 				(x * 26f) + (ResourceManager.getImage(HedgehogHavoc.BUG_IMG).getWidth() / 2),
-				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.BUG_IMG).getHeight() / 2));
+				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.BUG_IMG).getHeight() / 2) + HUDOffset);
 		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.BUG_IMG));
 		antiAliasing = false;
 	}

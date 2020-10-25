@@ -17,6 +17,7 @@ import jig.ResourceManager;
 class PlayingState extends BasicGameState {
 	private int hedgehogX;
 	private int hedgehogY;
+	private int badgerCount;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
@@ -28,12 +29,13 @@ class PlayingState extends BasicGameState {
 		hh.setLevel();
 		hedgehogX = 11;
 		hedgehogY = 11;
+		badgerCount = 1;
 	}
 	
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		HedgehogHavoc hh = (HedgehogHavoc)game;
-		g.drawImage(ResourceManager.getImage(HedgehogHavoc.BACKGROUND_IMG), 0, 0);
+		g.drawImage(ResourceManager.getImage(HedgehogHavoc.BACKGROUND_IMG), 0, hh.HUDHeight);
 		for (int i = 0; i < 23; i++) {
 			for (int j = 0; j < 23; j++) {
 				hh.grid[i][j].render(g);
@@ -103,6 +105,11 @@ class PlayingState extends BasicGameState {
 				
 				hh.grid[i][j].update(delta);
 			}
+		}
+		
+		if (hh.second <= 0 || badgerCount <= 0) {
+			hh.second = 30;
+			spawnBadger(hh);
 		}
 	}
 	
@@ -270,7 +277,44 @@ class PlayingState extends BasicGameState {
 		boolean checkBottomRight = (x == 22 && y == 22) || (!hh.grid[x + 1][y + 1].getIsGround() && !hh.grid[x + 1][y + 1].getIsHedgehog());
 		if (checkLeft && checkRight && checkUp && checkDown && checkTopLeft && checkTopRight && checkBottomLeft && checkBottomRight) {
 			hh.grid[x][y].setBadger(null);
-			hh.grid[x][y].setBug(new Bug(x, y));
+			hh.grid[x][y].setBug(new Bug(x, y, hh.HUDHeight));
+			badgerCount -= 1;
+		}
+	}
+	
+	private void spawnBadger(HedgehogHavoc hh) {
+		int tempX = (int) (Math.random() * 23);
+		int tempY = (int) (Math.random() * 23);
+		if (tempX < 0) {
+			tempX = 0;
+		} else if (tempX > 22) {
+			tempX = 22;
+		}
+		
+		if (tempY < 0) {
+			tempY = 0;
+		} else if (tempY > 22) {
+			tempY = 22;
+		}
+		
+		for (int i = tempX; i > 0; i--) {
+			for (int j = tempY; j > 0; j--) {
+				if (hh.grid[i][j].getIsGround()) {
+					hh.grid[i][j].setBadger(new Badger(i, j, hh.HUDHeight));
+					badgerCount++;
+					return;
+				}
+			}
+		}
+		
+		for (int i = tempX + 1; i < 23; i++) {
+			for (int j = tempY + 1; j < 23; j++) {
+				if (hh.grid[i][j].getIsGround()) {
+					hh.grid[i][j].setBadger(new Badger(i, j, hh.HUDHeight));
+					badgerCount++;
+					return;
+				}
+			}
 		}
 	}
 	
