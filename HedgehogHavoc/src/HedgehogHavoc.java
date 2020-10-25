@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Date;
 
 import jig.Entity;
 import jig.ResourceManager;
@@ -23,6 +24,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	
 	// Resources
 	public static final String BACKGROUND_IMG = "resource/background.png";
+	public static final String HUDBACKGROUND_IMG = "resource/hudbackground.png";
 	public static final String HEDGEHOGRIGHT_IMG = "resource/hedgehog_right.png";
 	public static final String HEDGEHOGLEFT_IMG = "resource/hedgehog_left.png";
 	public static final String BADGERRIGHT_IMG = "resource/badger_right.png";
@@ -33,10 +35,13 @@ public class HedgehogHavoc extends StateBasedGame {
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
+	public final int HUDHeight;
 	
 	int fps;
 	int score;
 	int currentLevel;
+	int second;
+	long previousTime;
 	
 	Tile[][] grid;
 	Hedgehog hedgehog;
@@ -53,10 +58,11 @@ public class HedgehogHavoc extends StateBasedGame {
 	 * @param height
 	 *            the window's height
 	 */
-	public HedgehogHavoc(String title, int width, int height) {
+	public HedgehogHavoc(String title, int width, int height, int hudheight) {
 		super(title);
 		ScreenHeight = height;
 		ScreenWidth = width;
+		HUDHeight = hudheight;
 
 		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
 	}
@@ -68,6 +74,7 @@ public class HedgehogHavoc extends StateBasedGame {
 		
 		// Pre-loading all image resources
 		ResourceManager.loadImage(BACKGROUND_IMG);
+		ResourceManager.loadImage(HUDBACKGROUND_IMG);
 		ResourceManager.loadImage(HEDGEHOGLEFT_IMG);
 		ResourceManager.loadImage(HEDGEHOGRIGHT_IMG);
 		ResourceManager.loadImage(BADGERLEFT_IMG);
@@ -84,17 +91,29 @@ public class HedgehogHavoc extends StateBasedGame {
 			}
 		}
 		
+		Date tempTime = new Date();
+		previousTime = tempTime.getTime();
+		second = 60;
 		currentLevel = 1;
 		score = 0;
-		hedgehog = new Hedgehog(11, 11);
+		hedgehog = new Hedgehog(11, 11, HUDHeight);
 		grid[11][11].setHedgehog(hedgehog);
 		grid[11][11].setIsHedgehog(true);
 	}
 	
 	public void renderStats(Graphics g) {
+		Date tempTime = new Date();
+		int tempSecond = (int) ((tempTime.getTime() - previousTime) / 1000);
+		if (tempSecond >= 1) {
+			second -= 1;
+			previousTime = tempTime.getTime();
+		}
+		
+		g.drawImage(ResourceManager.getImage(HUDBACKGROUND_IMG), 0, 0);
 		g.setColor(Color.black);
 		g.drawString("FPS: " + fps, 10, 10);
 		g.drawString("Score: " + score, 100, 10);
+		g.drawString("Timer: " + String.format("%02d", second), 300, 10);
 	}
 	
 	public void setLevel() {
@@ -103,19 +122,19 @@ public class HedgehogHavoc extends StateBasedGame {
 				for (int j = 4; j < 19; j++) {
 					// Making sure we're not overwriting the hedgehog with this if-statement.
 					if (i != 11 || j != 11) {
-						grid[i][j].setBlockMovable(new BlockMovable(i, j));
+						grid[i][j].setBlockMovable(new BlockMovable(i, j, HUDHeight));
 					}
 				}
 			}
 			
 			for (int i = 0; i < 23; i++) {
-				grid[i][0].setBlockImmovable(new BlockImmovable(i, 0));
-				grid[0][i].setBlockImmovable(new BlockImmovable(0, i));
-				grid[22][i].setBlockImmovable(new BlockImmovable(22, i));
-				grid[i][22].setBlockImmovable(new BlockImmovable(i, 22));
+				grid[i][0].setBlockImmovable(new BlockImmovable(i, 0, HUDHeight));
+				grid[0][i].setBlockImmovable(new BlockImmovable(0, i, HUDHeight));
+				grid[22][i].setBlockImmovable(new BlockImmovable(22, i, HUDHeight));
+				grid[i][22].setBlockImmovable(new BlockImmovable(i, 22, HUDHeight));
 			}
 			
-			grid[4][3].setBadger(new Badger(4, 3));
+			grid[4][3].setBadger(new Badger(4, 3, HUDHeight));
 		}
 	}
 	
@@ -127,8 +146,8 @@ public class HedgehogHavoc extends StateBasedGame {
 		try
 		{
 			// 23x23 grid with 26x26 pixel images = 598x598 resolution
-			app = new AppGameContainer(new HedgehogHavoc("Hedgehog Havoc", 598, 598));
-			app.setDisplayMode(598, 598, false);
+			app = new AppGameContainer(new HedgehogHavoc("Hedgehog Havoc", 598, 648, 50));
+			app.setDisplayMode(598, 648, false);
 			app.setShowFPS(false);
 			app.setVSync(true);
 			app.start();

@@ -12,10 +12,10 @@ class BlockMovable extends Entity {
 	 * @param x The initial X-position of the block.
 	 * @param y The initial Y-position of the block.
 	 */
-	public BlockMovable(final int x, final int y) {
+	public BlockMovable(final int x, final int y, final int HUDOffset) {
 		super(
 				(x * 26f) + (ResourceManager.getImage(HedgehogHavoc.BLOCK_MOVABLE_IMG).getWidth() / 2),
-				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.BLOCK_MOVABLE_IMG).getHeight() / 2));
+				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.BLOCK_MOVABLE_IMG).getHeight() / 2) + HUDOffset);
 		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.BLOCK_MOVABLE_IMG));
 		velocity = new Vector(0, 0);
 		moveCount = 0;
@@ -24,7 +24,7 @@ class BlockMovable extends Entity {
 	}
 	
 	public BlockMovable clone(BlockMovable block) {
-		BlockMovable newBlock = new BlockMovable(0, 0);
+		BlockMovable newBlock = new BlockMovable(0, 0, 0);
 		newBlock.setPosition(block.getPosition());
 		newBlock.velocity = block.velocity;
 		newBlock.moveCount = block.moveCount;

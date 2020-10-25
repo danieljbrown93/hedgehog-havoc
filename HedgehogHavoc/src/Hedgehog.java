@@ -12,10 +12,10 @@ class Hedgehog extends Entity {
 	 * @param x The initial X position within the grid.
 	 * @param y The initial Y position within the grid.
 	 */
-	public Hedgehog(final int x, final int y) {
+	public Hedgehog(final int x, final int y, final int HUDOffset) {
 		super(
 				(x * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG).getWidth() / 2),
-				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG).getHeight() / 2));
+				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG).getHeight() / 2) + HUDOffset);
 		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
 		velocity = new Vector(0, 0);
 		moveDir = "";
@@ -23,7 +23,7 @@ class Hedgehog extends Entity {
 	}
 	
 	public Hedgehog clone(Hedgehog hog) {
-		Hedgehog newHog = new Hedgehog(0, 0);
+		Hedgehog newHog = new Hedgehog(0, 0, 0);
 		newHog.setPosition(hog.getPosition());
 		newHog.velocity = hog.velocity;
 		newHog.moveCount = hog.moveCount;
