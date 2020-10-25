@@ -18,6 +18,7 @@ class PlayingState extends BasicGameState {
 	private int hedgehogX;
 	private int hedgehogY;
 	private int badgerCount;
+	private int caughtBadgers;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
@@ -30,6 +31,7 @@ class PlayingState extends BasicGameState {
 		hedgehogX = 11;
 		hedgehogY = 11;
 		badgerCount = 1;
+		caughtBadgers = 0;
 	}
 	
 	@Override
@@ -108,7 +110,7 @@ class PlayingState extends BasicGameState {
 		}
 		
 		if (hh.second <= 0 || badgerCount <= 0) {
-			hh.second = 30;
+			hh.second = 60;
 			spawnBadger(hh);
 		}
 	}
@@ -275,10 +277,29 @@ class PlayingState extends BasicGameState {
 		boolean checkTopRight = (x == 22 && y == 0) || (!hh.grid[x + 1][y - 1].getIsGround() && !hh.grid[x + 1][y - 1].getIsHedgehog());
 		boolean checkBottomLeft = (x == 0 && y == 22) || (!hh.grid[x - 1][y + 1].getIsGround() && !hh.grid[x - 1][y + 1].getIsHedgehog());
 		boolean checkBottomRight = (x == 22 && y == 22) || (!hh.grid[x + 1][y + 1].getIsGround() && !hh.grid[x + 1][y + 1].getIsHedgehog());
-		if (checkLeft && checkRight && checkUp && checkDown && checkTopLeft && checkTopRight && checkBottomLeft && checkBottomRight) {
-			hh.grid[x][y].setBadger(null);
-			hh.grid[x][y].setBug(new Bug(x, y, hh.HUDHeight));
-			badgerCount -= 1;
+		boolean allCaught = badgerCount == caughtBadgers;
+		if (checkLeft &&
+				checkRight &&
+				checkUp &&
+				checkDown &&
+				checkTopLeft &&
+				checkTopRight &&
+				checkBottomLeft &&
+				checkBottomRight) {
+			if (allCaught) {
+				hh.grid[x][y].setBadger(null);
+				hh.grid[x][y].setBug(new Bug(x, y, hh.HUDHeight));
+				badgerCount -= 1;
+				caughtBadgers -= 1;
+			} else if (!hh.grid[x][y].getBadger().caught) {
+				hh.grid[x][y].getBadger().caught = true;
+				caughtBadgers += 1;
+			}
+		} else {
+			if (hh.grid[x][y].getBadger().caught) {
+				hh.grid[x][y].getBadger().caught = false;
+				caughtBadgers -= 1;
+			}
 		}
 	}
 	

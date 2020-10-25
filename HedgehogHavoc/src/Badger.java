@@ -2,6 +2,7 @@ import jig.Entity;
 import jig.ResourceManager;
 
 class Badger extends Entity {
+	public boolean caught;
 	public int moveCount;
 	public String moveDir;
 	
@@ -16,6 +17,7 @@ class Badger extends Entity {
 				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.BADGERRIGHT_IMG).getHeight() / 2) + HUDOffset);
 		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.BADGERRIGHT_IMG));
 		moveDir = "";
+		caught = false;
 		antiAliasing = false;
 	}
 	
@@ -24,6 +26,7 @@ class Badger extends Entity {
 		newBadger.setPosition(badger.getPosition());
 		newBadger.moveCount = badger.moveCount;
 		newBadger.moveDir = badger.moveDir;
+		newBadger.caught = badger.caught;
 		return newBadger;
 	}
 	

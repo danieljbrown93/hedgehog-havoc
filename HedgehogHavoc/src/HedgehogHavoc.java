@@ -93,7 +93,7 @@ public class HedgehogHavoc extends StateBasedGame {
 		
 		Date tempTime = new Date();
 		previousTime = tempTime.getTime();
-		second = 30;
+		second = 60;
 		currentLevel = 1;
 		score = 0;
 		hedgehog = new Hedgehog(11, 11, HUDHeight);
