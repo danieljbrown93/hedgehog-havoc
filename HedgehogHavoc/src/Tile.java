@@ -9,9 +9,11 @@ class Tile extends Entity {
 	private Hedgehog hedgehog;
 	private Badger badger;
 	private BlockMovable blockMovable;
+	private BlockImmovable blockImmovable;
 	private boolean isHedgehog;
 	private boolean isBadger;
 	private boolean isBlockMovable;
+	private boolean isBlockImmovable;
 	private boolean isGround;
 	
 	/**
@@ -36,6 +38,8 @@ class Tile extends Entity {
 			badger.render(g);
 		} else if (isBlockMovable) {
 			blockMovable.render(g);
+		} else if (isBlockImmovable) {
+			blockImmovable.render(g);
 		}
 	}
 	
@@ -102,6 +106,21 @@ class Tile extends Entity {
 		}
 	}
 	
+	public BlockImmovable getBlockImmovable() {
+		return blockImmovable;
+	}
+	
+	public void setBlockImmovable(BlockImmovable block) {
+		if (block == null) {
+			blockImmovable.removeImage(ResourceManager.getImage(HedgehogHavoc.BLOCK_IMMOVABLE_IMG));
+			blockImmovable = null;
+			setIsBlockMovable(false);
+		} else {
+			blockImmovable = block;
+			setIsBlockImmovable(true);
+		}
+	}
+	
 	public boolean getIsHedgehog() {
 		return isHedgehog;
 	}
@@ -112,10 +131,12 @@ class Tile extends Entity {
 			isBadger = false;
 			isGround = false;
 			isBlockMovable = false;
+			isBlockImmovable = false;
 		} else {
 			isHedgehog = false;
 			isBadger = false;
 			isBlockMovable = false;
+			isBlockImmovable = false;
 			isGround = true;
 		}
 	}
@@ -130,10 +151,12 @@ class Tile extends Entity {
 			isHedgehog = false;
 			isGround = false;
 			isBlockMovable = false;
+			isBlockImmovable = false;
 		} else {
 			isBadger = false;
 			isHedgehog = false;
 			isBlockMovable = false;
+			isBlockImmovable = false;
 			isGround = true;
 		}
 	}
@@ -145,10 +168,32 @@ class Tile extends Entity {
 	public void setIsBlockMovable(boolean value) {
 		if (value) {
 			isBlockMovable = true;
+			isBlockImmovable = false;
 			isHedgehog = false;
 			isBadger = false;
 			isGround = false;
 		} else {
+			isBlockMovable = false;
+			isBlockImmovable = false;
+			isHedgehog = false;
+			isBadger = false;
+			isGround = true;
+		}
+	}
+	
+	public boolean getIsBlockImmovable() {
+		return isBlockImmovable;
+	}
+	
+	public void setIsBlockImmovable(boolean value) {
+		if (value) {
+			isBlockImmovable = true;
+			isBlockMovable = false;
+			isHedgehog = false;
+			isBadger = false;
+			isGround = false;
+		} else {
+			isBlockImmovable = false;
 			isBlockMovable = false;
 			isHedgehog = false;
 			isBadger = false;
@@ -166,11 +211,13 @@ class Tile extends Entity {
 			isHedgehog = false;
 			isBadger = false;
 			isBlockMovable = false;
+			isBlockImmovable = false;
 		} else {
 			isGround = false;
 			isHedgehog = false;
 			isBadger = false;
 			isBlockMovable = false;
+			isBlockImmovable = false;
 		}
 	}
 	
