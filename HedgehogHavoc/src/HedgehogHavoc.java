@@ -25,7 +25,8 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static final String BACKGROUND_IMG = "resource/background.png";
 	public static final String HEDGEHOGRIGHT_IMG = "resource/hedgehog_right.png";
 	public static final String HEDGEHOGLEFT_IMG = "resource/hedgehog_left.png";
-	public static final String BADGER_IMG = "resource/badger.png";
+	public static final String BADGERRIGHT_IMG = "resource/badger_right.png";
+	public static final String BADGERLEFT_IMG = "resource/badger_left.png";
 	public static final String BLOCK_MOVABLE_IMG = "resource/block_movable.png";
 	public static final String BLOCK_IMMOVABLE_IMG = "resource/block_immovable.png";
 	public static final String BUG_IMG = "resource/bug.png";
@@ -68,7 +69,8 @@ public class HedgehogHavoc extends StateBasedGame {
 		ResourceManager.loadImage(BACKGROUND_IMG);
 		ResourceManager.loadImage(HEDGEHOGLEFT_IMG);
 		ResourceManager.loadImage(HEDGEHOGRIGHT_IMG);
-		ResourceManager.loadImage(BADGER_IMG);
+		ResourceManager.loadImage(BADGERLEFT_IMG);
+		ResourceManager.loadImage(BADGERRIGHT_IMG);
 		ResourceManager.loadImage(BLOCK_MOVABLE_IMG);
 		ResourceManager.loadImage(BLOCK_IMMOVABLE_IMG);
 		ResourceManager.loadImage(BUG_IMG);
@@ -93,13 +95,18 @@ public class HedgehogHavoc extends StateBasedGame {
 		g.drawString("FPS: " + fps, 10, 10);
 	}
 	
-	public void refreshLevel(Graphics g) {
-		for (int i = 0; i < 23; i++) {
-			for (int j = 0; j < 23; j++) {
-				if (grid[i][j].getIsBlockMovable()) {
-					grid[i][j].getBlockMovable().render(g);
+	public void setLevel() {
+		if (currentLevel == 1) {
+			for (int i = 4; i < 19; i++) {
+				for (int j = 4; j < 19; j++) {
+					// Making sure we're not overwriting the hedgehog with this if-statement.
+					if (i != 11 || j != 11) {
+						grid[i][j].setBlockMovable(new BlockMovable(i, j));
+					}
 				}
 			}
+			
+			grid[4][3].setBadger(new Badger(4, 3));
 		}
 	}
 	
