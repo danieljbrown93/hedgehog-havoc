@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.ArrayList;
 
 import jig.Entity;
 import jig.ResourceManager;
@@ -37,7 +36,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	int fps;
 	int currentLevel;
 	
-	ArrayList<ArrayList<Tile>> grid;
+	Tile[][] grid;
 	Hedgehog hedgehog;
 	
 	private static AppGameContainer app;
@@ -75,21 +74,17 @@ public class HedgehogHavoc extends StateBasedGame {
 		ResourceManager.loadImage(BUG_IMG);
 		
 		// Initialize entities
-		grid = new ArrayList<ArrayList<Tile>>(23);
+		grid = new Tile[23][23];
 		for (int i = 0; i < 23; i++) {
-			ArrayList<Tile> newList = new ArrayList<Tile>(23);
 			for (int j = 0; j < 23; j++) {
-				Tile newTile = new Tile(i, j);
-				newList.add(newTile);
+				grid[i][j] = new Tile(i, j);
 			}
-			
-			grid.add(newList);
 		}
 		
 		currentLevel = 1;
 		hedgehog = new Hedgehog(11, 11);
-		grid.get(11).get(11).setHedgehog(hedgehog);
-		grid.get(11).get(11).setIsHedgehog(true);
+		grid[11][11].setHedgehog(hedgehog);
+		grid[11][11].setIsHedgehog(true);
 	}
 	
 	public void renderStats(Graphics g) {
@@ -98,26 +93,11 @@ public class HedgehogHavoc extends StateBasedGame {
 		g.drawString("FPS: " + fps, 10, 10);
 	}
 	
-	public void renderLevel(Graphics g) {
-		if (currentLevel == 1) {
-			for (int i = 4; i < 19; i++) {
-				for (int j = 4; j < 19; j++) {
-					// Making sure we're not overwriting the hedgehog with this if-statement.
-					if (i != 11 || j != 11) {
-						grid.get(i).get(j).setBlockMovable(new BlockMovable(i, j));
-						grid.get(i).get(j).setIsBlockMovable(true);
-						grid.get(i).get(j).getBlockMovable().render(g);
-					}
-				}
-			}
-		}
-	}
-	
 	public void refreshLevel(Graphics g) {
 		for (int i = 0; i < 23; i++) {
 			for (int j = 0; j < 23; j++) {
-				if (grid.get(i).get(j).getIsBlockMovable()) {
-					grid.get(i).get(j).getBlockMovable().render(g);
+				if (grid[i][j].getIsBlockMovable()) {
+					grid[i][j].getBlockMovable().render(g);
 				}
 			}
 		}

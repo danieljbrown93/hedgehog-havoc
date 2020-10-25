@@ -1,4 +1,7 @@
+import org.newdawn.slick.Graphics;
+
 import jig.Entity;
+import jig.ResourceManager;
 
 class Tile extends Entity {
 	private int xPos;
@@ -22,6 +25,15 @@ class Tile extends Entity {
 		isBlockMovable = false;
 	}
 	
+	@Override
+	public void render(Graphics g) {
+		if (isHedgehog) {
+			hedgehog.render(g);
+		} else if (isBlockMovable) {
+			blockMovable.render(g);
+		}
+	}
+	
 	public int getXPos() {
 		return xPos;
 	}
@@ -43,7 +55,15 @@ class Tile extends Entity {
 	}
 	
 	public void setHedgehog(Hedgehog hog) {
-		hedgehog = hog;
+		if (hog == null) {
+			hedgehog.removeImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
+			hedgehog.removeImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGRIGHT_IMG));
+			hedgehog = null;
+			setIsHedgehog(false);
+		} else {
+			hedgehog = hog;
+			setIsHedgehog(true);
+		}
 	}
 	
 	public BlockMovable getBlockMovable() {
@@ -51,7 +71,14 @@ class Tile extends Entity {
 	}
 	
 	public void setBlockMovable(BlockMovable block) {
-		blockMovable = block;
+		if (block == null) {
+			blockMovable.removeImage(ResourceManager.getImage(HedgehogHavoc.BLOCK_MOVABLE_IMG));
+			blockMovable = null;
+			setIsBlockMovable(false);
+		} else {
+			blockMovable = block;
+			setIsBlockMovable(true);
+		}
 	}
 	
 	public boolean getIsHedgehog() {
@@ -108,9 +135,31 @@ class Tile extends Entity {
 	 */
 	public void update(final int delta) {
 		if (isHedgehog) {
-			hedgehog.update(delta);
+			if (hedgehog.moveCount > 0) {
+				hedgehog.moveCount -= 2;
+				if (hedgehog.moveDir.equals("R")) {
+					hedgehog.setX(hedgehog.getX() + 2);
+				} else if (hedgehog.moveDir.equals("L")) {
+					hedgehog.setX(hedgehog.getX() - 2);
+				} else if (hedgehog.moveDir.equals("U")) {
+					hedgehog.setY(hedgehog.getY() - 2);
+				} else if (hedgehog.moveDir.equals("D")) {
+					hedgehog.setY(hedgehog.getY() + 2);
+				}
+			}
 		} else if (isBlockMovable) {
-			blockMovable.update(delta);
+			if (blockMovable.moveCount > 0) {
+				blockMovable.moveCount -= 2;
+				if (blockMovable.moveDir.equals("R")) {
+					blockMovable.setX(blockMovable.getX() + 2);
+				} else if (blockMovable.moveDir.equals("L")) {
+					blockMovable.setX(blockMovable.getX() - 2);
+				} else if (blockMovable.moveDir.equals("U")) {
+					blockMovable.setY(blockMovable.getY() - 2);
+				} else if (blockMovable.moveDir.equals("D")) {
+					blockMovable.setY(blockMovable.getY() + 2);
+				}
+			}
 		}
 	}
 }

@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -18,8 +15,8 @@ import jig.ResourceManager;
  * Transitions To PlayingState
  */
 class PlayingState extends BasicGameState {
-	private ArrayList<BlockMovable> movingBlocks;
-	private Graphics graphics;
+	private int hedgehogX;
+	private int hedgehogY;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
@@ -27,16 +24,19 @@ class PlayingState extends BasicGameState {
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		movingBlocks = new ArrayList<BlockMovable>(23);
+		HedgehogHavoc hh = (HedgehogHavoc)game;
+		setLevel(hh);
 	}
 	
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		HedgehogHavoc hh = (HedgehogHavoc)game;
-		graphics = g;
-		hh.renderStats(graphics);
-		hh.hedgehog.render(graphics);
-		hh.renderLevel(graphics);
+		hh.renderStats(g);
+		for (int i = 0; i < 23; i++) {
+			for (int j = 0; j < 23; j++) {
+				hh.grid[i][j].render(g);
+			}
+		}
 	}
 
 	@Override
@@ -45,74 +45,45 @@ class PlayingState extends BasicGameState {
 		HedgehogHavoc hh = (HedgehogHavoc)game;
 		hh.getFPS();
 		
-		if (input.isKeyDown(Input.KEY_RIGHT) && hh.hedgehog.gridX < 22 && hh.hedgehog.moveCount <= 0) {
-			if (hh.grid.get(hh.hedgehog.gridX + 1).get(hh.hedgehog.gridY).getIsBlockMovable()) {
-				if (moveBlock(hh, hh.hedgehog.gridX, hh.hedgehog.gridY, "R")) {
+		if (input.isKeyDown(Input.KEY_RIGHT) && hedgehogX < 22 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
+			if (hh.grid[hedgehogX + 1][hedgehogY].getIsBlockMovable()) {
+				if (moveBlock(hh, hedgehogX, hedgehogY, "R")) {
 					moveRight(hh);
 				}
-			} else if (hh.grid.get(hh.hedgehog.gridX + 1).get(hh.hedgehog.gridY).getIsGround()) {
+			} else if (hh.grid[hedgehogX + 1][hedgehogY].getIsGround()) {
 				moveRight(hh);
 			}
-		} else if (input.isKeyDown(Input.KEY_LEFT) && hh.hedgehog.gridX > 0 && hh.hedgehog.moveCount <= 0) {
-			if (hh.grid.get(hh.hedgehog.gridX - 1).get(hh.hedgehog.gridY).getIsBlockMovable()) {
-				if (moveBlock(hh, hh.hedgehog.gridX, hh.hedgehog.gridY, "L")) {
+		} else if (input.isKeyDown(Input.KEY_LEFT) && hedgehogX > 0 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
+			if (hh.grid[hedgehogX - 1][hedgehogY].getIsBlockMovable()) {
+				if (moveBlock(hh, hedgehogX, hedgehogY, "L")) {
 					moveLeft(hh);
 				}
-			} else if (hh.grid.get(hh.hedgehog.gridX - 1).get(hh.hedgehog.gridY).getIsGround()) {
+			} else if (hh.grid[hedgehogX - 1][hedgehogY].getIsGround()) {
 				moveLeft(hh);
 			}
-		} else if (input.isKeyDown(Input.KEY_UP) && hh.hedgehog.gridY > 0 && hh.hedgehog.moveCount <= 0) {
-			if (hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY - 1).getIsBlockMovable()) {
-				if (moveBlock(hh, hh.hedgehog.gridX, hh.hedgehog.gridY, "U")) {
+		} else if (input.isKeyDown(Input.KEY_UP) && hedgehogY > 0 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
+			if (hh.grid[hedgehogX][hedgehogY - 1].getIsBlockMovable()) {
+				if (moveBlock(hh, hedgehogX, hedgehogY, "U")) {
 					moveUp(hh);
 				}
-			} else if (hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY - 1).getIsGround()) {
+			} else if (hh.grid[hedgehogX][hedgehogY - 1].getIsGround()) {
 				moveUp(hh);
 			}
-		} else if (input.isKeyDown(Input.KEY_DOWN) && hh.hedgehog.gridY < 22 && hh.hedgehog.moveCount <= 0) {
-			if (hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY + 1).getIsBlockMovable()) {
-				if (moveBlock(hh, hh.hedgehog.gridX, hh.hedgehog.gridY, "D")) {
+		} else if (input.isKeyDown(Input.KEY_DOWN) && hedgehogY < 22 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
+			if (hh.grid[hedgehogX][hedgehogY + 1].getIsBlockMovable()) {
+				if (moveBlock(hh, hedgehogX, hedgehogY, "D")) {
 					moveDown(hh);
 				}
-			} else if (hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY + 1).getIsGround()) {
+			} else if (hh.grid[hedgehogX][hedgehogY + 1].getIsGround()) {
 				moveDown(hh);
 			}
-		} else {
-			if (hh.hedgehog.moveCount > 0) {
-				hh.hedgehog.moveCount -= 2;
-				if (hh.hedgehog.moveDir.equals("R")) {
-					hh.hedgehog.setX(hh.hedgehog.getX() + 2);
-				} else if (hh.hedgehog.moveDir.equals("L")) {
-					hh.hedgehog.setX(hh.hedgehog.getX() - 2);
-				} else if (hh.hedgehog.moveDir.equals("U")) {
-					hh.hedgehog.setY(hh.hedgehog.getY() - 2);
-				} else if (hh.hedgehog.moveDir.equals("D")) {
-					hh.hedgehog.setY(hh.hedgehog.getY() + 2);
-				}
-			}
 		}
 		
-		for (Iterator<BlockMovable> i = movingBlocks.iterator(); i.hasNext();) {
-			BlockMovable currentBlock = i.next();
-			if (currentBlock.moveTimer > 0) {
-				if (currentBlock.moveDirection.equals("R")) {
-					currentBlock.setX(currentBlock.getX() + 2);
-				} else if (currentBlock.moveDirection.equals("L")) {
-					currentBlock.setX(currentBlock.getX() - 2);
-				} else if (currentBlock.moveDirection.equals("U")) {
-					currentBlock.setY(currentBlock.getY() - 2);
-				} else if (currentBlock.moveDirection.equals("D")) {
-					currentBlock.setY(currentBlock.getY() + 2);
-				}
-				
-				currentBlock.moveTimer -= 2;
-				currentBlock.update(delta);
-			} else {
-				i.remove();
+		for (int i = 0; i < 23; i++) {
+			for (int j = 0; j < 23; j++) {
+				hh.grid[i][j].update(delta);
 			}
 		}
-		
-		updatePositions(hh, delta);
 	}
 
 	@Override
@@ -121,156 +92,101 @@ class PlayingState extends BasicGameState {
 	}
 	
 	private void moveRight(HedgehogHavoc hh) {
-		hh.hedgehog.addImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGRIGHT_IMG));
-		hh.hedgehog.removeImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
-		hh.hedgehog.moveCount = (int) hh.hedgehog.getCoarseGrainedWidth();
-		hh.hedgehog.moveDir = "R";
-		hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY).setIsGround(true);
-		hh.hedgehog.gridX += 1;
-		hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY).setIsHedgehog(true);
-		hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY).setHedgehog(hh.hedgehog);
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().addImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGRIGHT_IMG));
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().removeImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = (int) hh.grid[hedgehogX][hedgehogY].getHedgehog().getCoarseGrainedWidth();
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveDir = "R";
+		hh.grid[hedgehogX + 1][hedgehogY].setHedgehog(hh.grid[hedgehogX][hedgehogY].getHedgehog().clone(hh.grid[hedgehogX][hedgehogY].getHedgehog()));
+		hh.grid[hedgehogX][hedgehogY].setHedgehog(null);
+		hedgehogX += 1;
 	}
 	
 	private void moveLeft(HedgehogHavoc hh) {
-		hh.hedgehog.addImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
-		hh.hedgehog.removeImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGRIGHT_IMG));
-		hh.hedgehog.moveCount = (int) hh.hedgehog.getCoarseGrainedWidth();
-		hh.hedgehog.moveDir = "L";
-		hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY).setIsGround(true);
-		hh.hedgehog.gridX -= 1;
-		hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY).setIsHedgehog(true);
-		hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY).setHedgehog(hh.hedgehog);
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().addImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().removeImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGRIGHT_IMG));
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = (int) hh.grid[hedgehogX][hedgehogY].getHedgehog().getCoarseGrainedWidth();
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveDir = "L";
+		hh.grid[hedgehogX - 1][hedgehogY].setHedgehog(hh.grid[hedgehogX][hedgehogY].getHedgehog().clone(hh.grid[hedgehogX][hedgehogY].getHedgehog()));
+		hh.grid[hedgehogX][hedgehogY].setHedgehog(null);
+		hedgehogX -= 1;
 	}
 	
 	private void moveUp(HedgehogHavoc hh) {
-		hh.hedgehog.moveCount = (int) hh.hedgehog.getCoarseGrainedWidth();
-		hh.hedgehog.moveDir = "U";
-		hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY).setIsGround(true);
-		hh.hedgehog.gridY -= 1;
-		hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY).setIsHedgehog(true);
-		hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY).setHedgehog(hh.hedgehog);
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = (int) hh.grid[hedgehogX][hedgehogY].getHedgehog().getCoarseGrainedHeight();
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveDir = "U";
+		hh.grid[hedgehogX][hedgehogY - 1].setHedgehog(hh.grid[hedgehogX][hedgehogY].getHedgehog().clone(hh.grid[hedgehogX][hedgehogY].getHedgehog()));
+		hh.grid[hedgehogX][hedgehogY].setHedgehog(null);
+		hedgehogY -= 1;
 	}
 	
 	private void moveDown(HedgehogHavoc hh) {
-		hh.hedgehog.moveCount = (int) hh.hedgehog.getCoarseGrainedWidth();
-		hh.hedgehog.moveDir = "D";
-		hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY).setIsGround(true);
-		hh.hedgehog.gridY += 1;
-		hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY).setIsHedgehog(true);
-		hh.grid.get(hh.hedgehog.gridX).get(hh.hedgehog.gridY).setHedgehog(hh.hedgehog);
-	}
-	
-	private void updatePositions(HedgehogHavoc hh, int delta) {
-//		float widthSegment = hh.ScreenWidth / 23;
-//		float heightSegment = hh.ScreenHeight / 23;
-		
-		// Update hedgehog position.
-		hh.hedgehog.update(delta);
-		
-		// Update badger positions.
-		// TODO
-		
-		// Update block positions.
-//		for (int i = 0; i < 23; i++) {
-//			for (int j = 0; j < 23; j++) {
-//				BlockMovable currentBlock = hh.movableBlocks.get(i).get(j);
-//				currentBlock.update(delta);
-//				if (blockVel.getX() != 0 || blockVel.getY() != 0) {
-//					if (currentBlock.getX() >= widthSegment * i && currentBlock.getX() <= widthSegment * (i + 1)) {
-//						if (currentBlock.getY() >= heightSegment * j && currentBlock.getY() <= heightSegment * (j + 1)) {
-//							if (blockVel.getX() > 0) {
-//								// Block moving right.
-//								if (hh.grid.get(currentBlock.gridX - 1).get(currentBlock.gridY).equals("H")) {
-//									hh.grid.get(currentBlock.gridX - 1).set(currentBlock.gridY, "G");
-//									hh.grid.get(currentBlock.gridX).set(currentBlock.gridY, "H");
-//								}
-//							} else if (blockVel.getX() < 0) {
-//								// Block moving left.
-//								if (hh.grid.get(currentBlock.gridX + 1).get(currentBlock.gridY).equals("H")) {
-//									hh.grid.get(currentBlock.gridX + 1).set(currentBlock.gridY, "G");
-//									hh.grid.get(currentBlock.gridX).set(currentBlock.gridY, "H");
-//								}
-//							} else if (blockVel.getY() < 0) {
-//								// Block moving up.
-//								if (hh.grid.get(currentBlock.gridX).get(currentBlock.gridY + 1).equals("H")) {
-//									hh.grid.get(currentBlock.gridX).set(currentBlock.gridY + 1, "G");
-//									hh.grid.get(currentBlock.gridX).set(currentBlock.gridY, "H");
-//								}
-//							} else if (blockVel.getY() > 0) {
-//								// Block moving down.
-//								if (hh.grid.get(currentBlock.gridX).get(currentBlock.gridY - 1).equals("H")) {
-//									hh.grid.get(currentBlock.gridX).set(currentBlock.gridY - 1, "G");
-//									hh.grid.get(currentBlock.gridX).set(currentBlock.gridY, "H");
-//								}
-//							}
-//							
-//							hh.grid.get(i).set(j, "M");
-//							hh.movableBlocks.get(i).get(j).gridX = i;
-//							hh.movableBlocks.get(i).get(j).gridY = j;
-//						}
-//					}
-//				}
-//			}
-//		}
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = (int) hh.grid[hedgehogX][hedgehogY].getHedgehog().getCoarseGrainedHeight();
+		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveDir = "D";
+		hh.grid[hedgehogX][hedgehogY + 1].setHedgehog(hh.grid[hedgehogX][hedgehogY].getHedgehog().clone(hh.grid[hedgehogX][hedgehogY].getHedgehog()));
+		hh.grid[hedgehogX][hedgehogY].setHedgehog(null);
+		hedgehogY += 1;
 	}
 	
 	private boolean moveBlock(HedgehogHavoc hh, int x, int y, String direction) {
-		if (x < 1 || x > 21 || y < 1 || y > 21) {
-			// We don't want to go outside of our array bounds.
-			return false;
-		}
-		
 		if (direction.equals("R")) {
+			if (x > 21) return false;
 			x++;
 		} else if (direction.equals("L")) {
+			if (x < 1) return false;
 			x--;
 		} else if (direction.equals("U")) {
+			if (y < 1) return false;
 			y--;
 		} else if (direction.equals("D")) {
+			if (y > 21) return false;
 			y++;
 		}
 		
-		if (hh.grid.get(x).get(y).getIsBlockMovable()) {
-			if (moveBlock(hh, x, y, direction)) {
+		if (hh.grid[x][y].getIsBlockMovable()) {
+			if (moveBlock(hh, x, y, direction)) {				
 				if (direction.equals("R")) {
-					hh.grid.get(x).get(y).getBlockMovable().moveDirection = "R";
-					hh.grid.get(x).get(y).getBlockMovable().gridX += 1;
-					hh.grid.get(x).get(y).getBlockMovable().moveTimer = (int) hh.grid.get(x).get(y).getBlockMovable().getCoarseGrainedWidth();
-					hh.grid.get(x + 1).get(y).setBlockMovable(hh.grid.get(x).get(y).getBlockMovable());
-					hh.grid.get(x + 1).get(y).setIsBlockMovable(true);
-					movingBlocks.add(hh.grid.get(x + 1).get(y).getBlockMovable());
+					hh.grid[x + 1][y].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
+					hh.grid[x + 1][y].getBlockMovable().moveDir = "R";
+					hh.grid[x + 1][y].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedWidth();
 				} else if (direction.equals("L")) {
-					hh.grid.get(x).get(y).getBlockMovable().moveDirection = "L";
-					hh.grid.get(x).get(y).getBlockMovable().gridX -= 1;
-					hh.grid.get(x).get(y).getBlockMovable().moveTimer = (int) hh.grid.get(x).get(y).getBlockMovable().getCoarseGrainedWidth();
-					hh.grid.get(x - 1).get(y).setBlockMovable(hh.grid.get(x).get(y).getBlockMovable());
-					hh.grid.get(x - 1).get(y).setIsBlockMovable(true);
-					movingBlocks.add(hh.grid.get(x - 1).get(y).getBlockMovable());
+					hh.grid[x - 1][y].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
+					hh.grid[x - 1][y].getBlockMovable().moveDir = "L";
+					hh.grid[x - 1][y].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedWidth();
 				} else if (direction.equals("U")) {
-					hh.grid.get(x).get(y).getBlockMovable().moveDirection = "U";
-					hh.grid.get(x).get(y).getBlockMovable().gridY -= 1;
-					hh.grid.get(x).get(y).getBlockMovable().moveTimer = (int) hh.grid.get(x).get(y).getBlockMovable().getCoarseGrainedHeight();
-					hh.grid.get(x).get(y - 1).setBlockMovable(hh.grid.get(x).get(y).getBlockMovable());
-					hh.grid.get(x).get(y - 1).setIsBlockMovable(true);
-					movingBlocks.add(hh.grid.get(x).get(y - 1).getBlockMovable());
+					hh.grid[x][y - 1].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
+					hh.grid[x][y - 1].getBlockMovable().moveDir = "U";
+					hh.grid[x][y - 1].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedHeight();
 				} else if (direction.equals("D")) {
-					hh.grid.get(x).get(y).getBlockMovable().moveDirection = "D";
-					hh.grid.get(x).get(y).getBlockMovable().gridY += 1;
-					hh.grid.get(x).get(y).getBlockMovable().moveTimer = (int) hh.grid.get(x).get(y).getBlockMovable().getCoarseGrainedHeight();
-					hh.grid.get(x).get(y + 1).setBlockMovable(hh.grid.get(x).get(y).getBlockMovable());
-					hh.grid.get(x).get(y + 1).setIsBlockMovable(true);
-					movingBlocks.add(hh.grid.get(x).get(y + 1).getBlockMovable());
+					hh.grid[x][y + 1].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
+					hh.grid[x][y + 1].getBlockMovable().moveDir = "D";
+					hh.grid[x][y + 1].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedHeight();
 				}
 
-				hh.grid.get(x).get(y).setIsGround(true);
+				hh.grid[x][y].setBlockMovable(null);
 				return true;
 			} else {
 				return false;
 			}
-		} else if (hh.grid.get(x).get(y).getIsGround()) {
+		} else if (hh.grid[x][y].getIsGround()) {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	
+	private void setLevel(HedgehogHavoc hh) {
+		if (hh.currentLevel == 1) {
+			for (int i = 4; i < 19; i++) {
+				for (int j = 4; j < 19; j++) {
+					// Making sure we're not overwriting the hedgehog with this if-statement.
+					if (i != 11 || j != 11) {
+						hh.grid[i][j].setBlockMovable(new BlockMovable(i, j));
+					}
+				}
+			}
+			
+			hedgehogX = 11;
+			hedgehogY = 11;
 		}
 	}
 }

@@ -1,12 +1,11 @@
 import jig.Entity;
 import jig.ResourceManager;
+import jig.Vector;
 
 class BlockMovable extends Entity {
-	private boolean blockActive;
-	public int moveTimer;
-	public int gridX;
-	public int gridY;
-	public String moveDirection;
+	private Vector velocity;
+	public int moveCount;
+	public String moveDir;
 	
 	/**
 	 * Create a new movable block that will be movable by the player.
@@ -18,33 +17,41 @@ class BlockMovable extends Entity {
 				(x * 26f) + (ResourceManager.getImage(HedgehogHavoc.BLOCK_MOVABLE_IMG).getWidth() / 2),
 				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.BLOCK_MOVABLE_IMG).getHeight() / 2));
 		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.BLOCK_MOVABLE_IMG));
-		gridX = x;
-		gridY = y;
-		blockActive = false;
-		moveTimer = 0;
-		moveDirection = "";
+		velocity = new Vector(0, 0);
+		moveCount = 0;
+		moveDir = "";
 	}
 	
-	public BlockMovable clone() {
-		BlockMovable newBlock = new BlockMovable(gridX, gridY);
-		newBlock.blockActive = blockActive;
-		newBlock.moveDirection = moveDirection;
-		newBlock.moveTimer = moveTimer;
-		
+	public BlockMovable clone(BlockMovable block) {
+		BlockMovable newBlock = new BlockMovable(0, 0);
+		newBlock.setPosition(block.getPosition());
+		newBlock.velocity = block.velocity;
+		newBlock.moveCount = block.moveCount;
+		newBlock.moveDir = block.moveDir;
 		return newBlock;
 	}
 	
-	public void setActive(final boolean value) {
-		blockActive = value;
+	/**
+	 * Sets the velocity of the Block.
+	 * @param v The velocity to set the Block at.
+	 */
+	public void setVelocity(final Vector v) {
+		velocity = v;
 	}
 	
-	public boolean getActive() {
-		return blockActive;
+	/**
+	 * Get the current velocity of the Block.
+	 * @return Returns the Velocity of the Block.
+	 */
+	public Vector getVelocity() {
+		return velocity;
 	}
 	
 	/**
 	 * Update the Hedgehog.
 	 * @param delta The delta value for which to translate the velocity of the Hedgehog.
 	 */
-	public void update(final int delta) {}
+	public void update(final int delta) {
+		translate(velocity.scale(delta));
+	}
 }
