@@ -21,6 +21,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class HedgehogHavoc extends StateBasedGame {
 	// State IDs for each state.
 	public static final int PLAYINGSTATE = 0;
+	public static final int PAUSESTATE = 1;
 	
 	// Resources
 	public static final String BACKGROUND_IMG = "resource/background.png";
@@ -74,6 +75,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
 		addState(new PlayingState());
+		addState(new PauseState());
 		
 		// Pre-loading all image resources
 		ResourceManager.loadImage(BACKGROUND_IMG);
