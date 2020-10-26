@@ -9,10 +9,10 @@
 - **[7]** Add Timer System, have more badgers spawn if timer expires, have timer extend if all badgers are caught
 - **[8]** Add extra lives system. Have hedgehog lose life if it collides with a badger
 - **[9]** Add scoring system, increasing points if badgers are caught
+- **[10]** Add path finding algorithm to the badgers
 
 # Open Issues
 
-- **[10]** Add path finding algorithm to the badgers
 - **[11]** Add a pause menu
 - **[12]** Add levels 2 and 3, make badgers faster
 - **[13]** Add hole entity
