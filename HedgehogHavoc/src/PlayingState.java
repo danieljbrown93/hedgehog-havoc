@@ -15,13 +15,17 @@ import jig.ResourceManager;
  * Transitions To PlayingState
  */
 class PlayingState extends BasicGameState {
+	private Pathfinding pathFinder;
 	private int hedgehogX;
 	private int hedgehogY;
 	private int badgerCount;
 	private int caughtBadgers;
+	private boolean hedgehogMoved;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
+		pathFinder = new Pathfinding();
+		hedgehogMoved = false;
 	}
 
 	@Override
@@ -51,11 +55,14 @@ class PlayingState extends BasicGameState {
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		Input input = container.getInput();
 		HedgehogHavoc hh = (HedgehogHavoc)game;
-		hh.getFPS();
 		if (hh.lives <= 0) {
 			hh.restartGame();
+			badgerCount = 0;
+			caughtBadgers = 0;
 			game.enterState(HedgehogHavoc.PLAYINGSTATE);
 		}
+		
+		hh.getFPS();
 		
 		if (input.isKeyDown(Input.KEY_RIGHT) && hedgehogX < 22 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
 			if (hh.grid[hedgehogX + 1][hedgehogY].getIsBlockMovable()) {
@@ -118,7 +125,16 @@ class PlayingState extends BasicGameState {
 		for (int i = 0; i < 23; i++) {
 			for (int j = 0; j < 23; j++) {
 				if (hh.grid[i][j].getIsBadger() && hh.grid[i][j].getBadger().moveCount <= 0) {
-					pathToHedgehog(hh, i, j);
+					if (hedgehogMoved || hh.grid[i][j].getBadger().path.isEmpty()) {
+						hh.grid[i][j].getBadger().path = pathFinder.BFS(hh.grid, i, j);
+						hedgehogMoved = false;
+					}
+					
+					if (hh.grid[i][j].getBadger().path.isEmpty()) {
+						pathToHedgehog(hh, i, j);
+					} else {
+						moveBadger(hh, i, j);
+					}
 				}
 				
 				hh.grid[i][j].update(delta);
@@ -132,6 +148,7 @@ class PlayingState extends BasicGameState {
 					hh.score = 0;
 				}
 			}
+			
 			hh.second = 60;
 			spawnBadger(hh);
 		}
@@ -191,6 +208,7 @@ class PlayingState extends BasicGameState {
 		hh.grid[hedgehogX + 1][hedgehogY].setHedgehog(hh.grid[hedgehogX][hedgehogY].getHedgehog().clone(hh.grid[hedgehogX][hedgehogY].getHedgehog()));
 		hh.grid[hedgehogX][hedgehogY].setHedgehog(null);
 		hedgehogX += 1;
+		hedgehogMoved = true;
 	}
 	
 	private void moveLeft(HedgehogHavoc hh) {
@@ -201,6 +219,7 @@ class PlayingState extends BasicGameState {
 		hh.grid[hedgehogX - 1][hedgehogY].setHedgehog(hh.grid[hedgehogX][hedgehogY].getHedgehog().clone(hh.grid[hedgehogX][hedgehogY].getHedgehog()));
 		hh.grid[hedgehogX][hedgehogY].setHedgehog(null);
 		hedgehogX -= 1;
+		hedgehogMoved = true;
 	}
 	
 	private void moveUp(HedgehogHavoc hh) {
@@ -209,6 +228,7 @@ class PlayingState extends BasicGameState {
 		hh.grid[hedgehogX][hedgehogY - 1].setHedgehog(hh.grid[hedgehogX][hedgehogY].getHedgehog().clone(hh.grid[hedgehogX][hedgehogY].getHedgehog()));
 		hh.grid[hedgehogX][hedgehogY].setHedgehog(null);
 		hedgehogY -= 1;
+		hedgehogMoved = true;
 	}
 	
 	private void moveDown(HedgehogHavoc hh) {
@@ -217,6 +237,20 @@ class PlayingState extends BasicGameState {
 		hh.grid[hedgehogX][hedgehogY + 1].setHedgehog(hh.grid[hedgehogX][hedgehogY].getHedgehog().clone(hh.grid[hedgehogX][hedgehogY].getHedgehog()));
 		hh.grid[hedgehogX][hedgehogY].setHedgehog(null);
 		hedgehogY += 1;
+		hedgehogMoved = true;
+	}
+	
+	private void moveBadger(HedgehogHavoc hh, int x, int y) {
+		Tile path = hh.grid[x][y].getBadger().path.remove(0);
+		if (path.getXPos() > x) {
+			moveBadgerRight(hh, x, y);
+		} else if (path.getXPos() < x) {
+			moveBadgerLeft(hh, x, y);
+		} else if (path.getYPos() < y) {
+			moveBadgerUp(hh, x, y);
+		} else if (path.getYPos() > y) {
+			moveBadgerDown(hh, x, y);
+		}
 	}
 	
 	private void pathToHedgehog(HedgehogHavoc hh, int badgerX, int badgerY) {

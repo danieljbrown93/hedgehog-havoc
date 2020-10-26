@@ -4,8 +4,10 @@ import jig.Entity;
 import jig.ResourceManager;
 
 class Tile extends Entity {
-	private int xPos;
-	private int yPos;
+	public DebugTile debugTile;
+	
+	private final int xPos;
+	private final int yPos;
 	private Hedgehog hedgehog;
 	private Badger badger;
 	private Bug bug;
@@ -17,6 +19,10 @@ class Tile extends Entity {
 	private boolean isBlockMovable;
 	private boolean isBlockImmovable;
 	private boolean isGround;
+	private boolean discovered;
+	private boolean tileDebug;
+	private int score;
+	private Tile parent;
 	
 	/**
 	 * Create a new movable block that will be movable by the player.
@@ -26,16 +32,26 @@ class Tile extends Entity {
 	public Tile(final int x, final int y) {
 		xPos = x;
 		yPos = y;
+		score = 0;
+		discovered = false;
+		parent = null;
 		isGround = true;
 		isHedgehog = false;
 		isBadger = false;
 		isBug = false;
 		isBlockMovable = false;
 		isBlockImmovable = false;
+		tileDebug = false;
 	}
 	
 	@Override
 	public void render(Graphics g) {
+		if (HedgehogHavoc.debug) {
+			if (tileDebug) {
+				debugTile.render(g);
+			}
+		}
+		
 		if (isHedgehog) {
 			hedgehog.render(g);
 		} else if (isBadger) {
@@ -49,20 +65,12 @@ class Tile extends Entity {
 		}
 	}
 	
-	public int getXPos() {
+	public final int getXPos() {
 		return xPos;
 	}
 	
-	public int getYPos() {
+	public final int getYPos() {
 		return yPos;
-	}
-	
-	public void setXPos(int x) {
-		xPos = x;
-	}
-	
-	public void setYPos(int y) {
-		yPos = y;
 	}
 	
 	public Hedgehog getHedgehog() {
@@ -271,6 +279,43 @@ class Tile extends Entity {
 			isBug = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
+		}
+	}
+	
+	public void setScore(int s) {
+		score = s;
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	
+	public void setDiscovered(boolean value) {
+		discovered = value;
+	}
+	
+	public boolean isDiscovered() {
+		return discovered;
+	}
+	
+	public void setParent(Tile p) {
+		parent = p;
+	}
+	
+	public Tile getParent() {
+		return parent;
+	}
+	
+	public void setDebugActive(boolean value) {
+		if (value) {
+			debugTile = new DebugTile(
+					xPos,
+					yPos,
+					ResourceManager.getImage(HedgehogHavoc.HUDBACKGROUND_IMG).getHeight());
+			tileDebug = true;
+		} else {
+			debugTile = null;
+			tileDebug = false;
 		}
 	}
 	
