@@ -16,6 +16,7 @@ import jig.ResourceManager;
  */
 class PlayingState extends BasicGameState {
 	private Pathfinding pathFinder;
+	private int pauseTimer;
 	private int hedgehogX;
 	private int hedgehogY;
 	private int badgerCount;
@@ -24,18 +25,19 @@ class PlayingState extends BasicGameState {
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		pathFinder = new Pathfinding();
-		hedgehogMoved = false;
-	}
-
-	@Override
-	public void enter(GameContainer container, StateBasedGame game) {
 		HedgehogHavoc hh = (HedgehogHavoc)game;
 		hh.setLevel();
 		hedgehogX = 11;
 		hedgehogY = 11;
 		badgerCount = 1;
 		caughtBadgers = 0;
+		pathFinder = new Pathfinding();
+		hedgehogMoved = false;
+	}
+
+	@Override
+	public void enter(GameContainer container, StateBasedGame game) {
+		pauseTimer = 10;
 	}
 	
 	@Override
@@ -55,6 +57,7 @@ class PlayingState extends BasicGameState {
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		Input input = container.getInput();
 		HedgehogHavoc hh = (HedgehogHavoc)game;
+		
 		if (hh.lives <= 0) {
 			hh.restartGame();
 			badgerCount = 0;
@@ -120,6 +123,10 @@ class PlayingState extends BasicGameState {
 				hh.lives -= 1;
 				respawnHedgehog(hh);
 			}
+		} else if (input.isKeyDown(Input.KEY_ESCAPE) && pauseTimer <= 0) {
+			pauseTimer = 10;
+			game.enterState(HedgehogHavoc.PAUSESTATE);
+			return;
 		}
 		
 		for (int i = 0; i < 23; i++) {
@@ -151,6 +158,10 @@ class PlayingState extends BasicGameState {
 			
 			hh.second = 60;
 			spawnBadger(hh);
+		}
+		
+		if (pauseTimer > 0) {
+			pauseTimer -= 1;
 		}
 	}
 	
@@ -460,9 +471,23 @@ class PlayingState extends BasicGameState {
 		for (int i = tempX; i > 0; i--) {
 			for (int j = tempY; j > 0; j--) {
 				if (hh.grid[i][j].getIsGround()) {
-					hh.grid[i][j].setBadger(new Badger(i, j, hh.HUDHeight));
-					badgerCount++;
-					return;
+					boolean hedgehogNear = false;
+					for (int k = -1; k <= 1; k += 2) {
+						int a = i + k;
+						int b = j + k;
+						
+						if (a < 0 || a > 22) continue;
+						if (hh.grid[a][j].getIsHedgehog()) hedgehogNear = true;
+						
+						if (b < 0 || b > 22) continue;
+						if (hh.grid[i][b].getIsHedgehog()) hedgehogNear = true;
+					}
+					
+					if (!hedgehogNear) {
+						hh.grid[i][j].setBadger(new Badger(i, j, hh.HUDHeight));
+						badgerCount++;
+						return;
+					}
 				}
 			}
 		}
@@ -470,9 +495,23 @@ class PlayingState extends BasicGameState {
 		for (int i = tempX + 1; i < 23; i++) {
 			for (int j = tempY + 1; j < 23; j++) {
 				if (hh.grid[i][j].getIsGround()) {
-					hh.grid[i][j].setBadger(new Badger(i, j, hh.HUDHeight));
-					badgerCount++;
-					return;
+					boolean hedgehogNear = false;
+					for (int k = -1; k <= 1; k += 2) {
+						int a = i + k;
+						int b = j + k;
+						
+						if (a < 0 || a > 22) continue;
+						if (hh.grid[a][j].getIsHedgehog()) hedgehogNear = true;
+						
+						if (b < 0 || b > 22) continue;
+						if (hh.grid[i][b].getIsHedgehog()) hedgehogNear = true;
+					}
+					
+					if (!hedgehogNear) {
+						hh.grid[i][j].setBadger(new Badger(i, j, hh.HUDHeight));
+						badgerCount++;
+						return;
+					}
 				}
 			}
 		}
