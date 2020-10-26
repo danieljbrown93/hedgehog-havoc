@@ -12,10 +12,10 @@
 - **[10]** Add path finding algorithm to the badgers
 - **[11]** Add a pause menu
 - **[12]** Add levels 2 and 3, make badgers faster
+- **[13]** Add hole entity
 
 # Open Issues
 
-- **[13]** Add hole entity
 - **[14]** Add levels 4 and 5
 - **[15]** Add level select menu
 - **[16]** Add game over screen when all lives are gone or all levels are cleared

@@ -23,6 +23,7 @@ class PlayingState extends BasicGameState {
 	private int caughtBadgers;
 	private int remainingBadgers;
 	private boolean hedgehogMoved;
+	private boolean hedgehogStuck;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
@@ -38,6 +39,7 @@ class PlayingState extends BasicGameState {
 		remainingBadgers = HedgehogHavoc.BADGERCOUNT;
 		pathFinder = new Pathfinding();
 		hedgehogMoved = false;
+		hedgehogStuck = false;
 	}
 
 	@Override
@@ -76,6 +78,12 @@ class PlayingState extends BasicGameState {
 		if (remainingBadgers <= 0) {
 			changeLevel(hh, game, hh.currentLevel + 1);
 			return;
+		}
+		
+		if (hedgehogStuck && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
+			hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = 300;
+			hh.grid[hedgehogX][hedgehogY].getHedgehog().moveDir = "";
+			hedgehogStuck = false;
 		}
 		
 		hh.getFPS();
@@ -228,6 +236,10 @@ class PlayingState extends BasicGameState {
 		} else if (hh.grid[hedgehogX + 1][hedgehogY].getIsBadger()) {
 			hh.lives -= 1;
 			respawnHedgehog(hh);
+		} else if (hh.grid[hedgehogX + 1][hedgehogY].getIsHole()) {
+			hh.grid[hedgehogX + 1][hedgehogY].setHole(null);
+			hedgehogStuck = true;
+			moveRight(hh);
 		}
 	}
 	
@@ -244,6 +256,10 @@ class PlayingState extends BasicGameState {
 		} else if (hh.grid[hedgehogX - 1][hedgehogY].getIsBadger()) {
 			hh.lives -= 1;
 			respawnHedgehog(hh);
+		} else if (hh.grid[hedgehogX - 1][hedgehogY].getIsHole()) {
+			hh.grid[hedgehogX - 1][hedgehogY].setHole(null);
+			hedgehogStuck = true;
+			moveLeft(hh);
 		}
 	}
 	
@@ -260,6 +276,10 @@ class PlayingState extends BasicGameState {
 		} else if (hh.grid[hedgehogX][hedgehogY - 1].getIsBadger()) {
 			hh.lives -= 1;
 			respawnHedgehog(hh);
+		} else if (hh.grid[hedgehogX][hedgehogY - 1].getIsHole()) {
+			hh.grid[hedgehogX][hedgehogY - 1].setHole(null);
+			hedgehogStuck = true;
+			moveUp(hh);
 		}
 	}
 	
@@ -276,6 +296,10 @@ class PlayingState extends BasicGameState {
 		} else if (hh.grid[hedgehogX][hedgehogY + 1].getIsBadger()) {
 			hh.lives -= 1;
 			respawnHedgehog(hh);
+		} else if (hh.grid[hedgehogX][hedgehogY + 1].getIsHole()) {
+			hh.grid[hedgehogX][hedgehogY + 1].setHole(null);
+			hedgehogStuck = true;
+			moveDown(hh);
 		}
 	}
 	
