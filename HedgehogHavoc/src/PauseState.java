@@ -1,3 +1,4 @@
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -15,6 +16,8 @@ import jig.ResourceManager;
  * Transitions To PlayingState
  */
 class PauseState extends BasicGameState {
+	private int pauseTimer;
+	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 	}
@@ -22,12 +25,15 @@ class PauseState extends BasicGameState {
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		HedgehogHavoc hh = (HedgehogHavoc)game;
+		pauseTimer = 10;
 	}
 	
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		HedgehogHavoc hh = (HedgehogHavoc)game;
-		g.drawImage(ResourceManager.getImage(HedgehogHavoc.BACKGROUND_IMG), 0, hh.HUDHeight);
+		g.setColor(Color.white);
+		g.drawString("Paused", 10, 10);
+		g.drawString("Escape: Return to game", 10, 30);
 	}
 
 	@Override
@@ -37,8 +43,12 @@ class PauseState extends BasicGameState {
 				
 		hh.getFPS();
 		
-		if (input.isKeyDown(Input.KEY_ESCAPE)) {
-			
+		if (input.isKeyDown(Input.KEY_ESCAPE) && pauseTimer <= 0) {
+			game.enterState(HedgehogHavoc.PLAYINGSTATE);
+		}
+		
+		if (pauseTimer > 0) {
+			pauseTimer -= 1;
 		}
 	}
 

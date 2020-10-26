@@ -26,20 +26,20 @@ class PlayingState extends BasicGameState {
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
-		pathFinder = new Pathfinding();
-		hedgehogMoved = false;
-		paused = false;
-		pauseTimer = 0;
-	}
-
-	@Override
-	public void enter(GameContainer container, StateBasedGame game) {
 		HedgehogHavoc hh = (HedgehogHavoc)game;
 		hh.setLevel();
 		hedgehogX = 11;
 		hedgehogY = 11;
 		badgerCount = 1;
 		caughtBadgers = 0;
+		pathFinder = new Pathfinding();
+		hedgehogMoved = false;
+		paused = false;
+	}
+
+	@Override
+	public void enter(GameContainer container, StateBasedGame game) {
+		pauseTimer = 10;
 	}
 	
 	@Override
