@@ -32,6 +32,8 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static final String BLOCK_MOVABLE_IMG = "resource/block_movable.png";
 	public static final String BLOCK_IMMOVABLE_IMG = "resource/block_immovable.png";
 	public static final String BUG_IMG = "resource/bug.png";
+	public static final String PATH_DEBUG_IMG = "resource/path_debug.png";
+	public static final boolean debug = true;
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
@@ -46,7 +48,6 @@ public class HedgehogHavoc extends StateBasedGame {
 	
 	Tile[][] grid;
 	Hedgehog hedgehog;
-	Graphics graphics;
 	
 	private static AppGameContainer app;
 
@@ -84,12 +85,14 @@ public class HedgehogHavoc extends StateBasedGame {
 		ResourceManager.loadImage(BLOCK_MOVABLE_IMG);
 		ResourceManager.loadImage(BLOCK_IMMOVABLE_IMG);
 		ResourceManager.loadImage(BUG_IMG);
+		ResourceManager.loadImage(PATH_DEBUG_IMG);
 		
 		// Initialize entities
 		grid = new Tile[23][23];
 		for (int i = 0; i < 23; i++) {
 			for (int j = 0; j < 23; j++) {
 				grid[i][j] = new Tile(i, j);
+				grid[i][j].setDebugActive(false);
 			}
 		}
 		
@@ -105,7 +108,6 @@ public class HedgehogHavoc extends StateBasedGame {
 	}
 	
 	public void renderStats(Graphics g) {
-		this.graphics = g;
 		Date tempTime = new Date();
 		int tempSecond = (int) ((tempTime.getTime() - previousTime) / 1000);
 		if (tempSecond >= 1) {
@@ -149,6 +151,7 @@ public class HedgehogHavoc extends StateBasedGame {
 		for (int i = 0; i < 23; i++) {
 			for (int j = 0; j < 23; j++) {
 				grid[i][j] = new Tile(i, j);
+				grid[i][j].setDebugActive(false);
 			}
 		}
 		

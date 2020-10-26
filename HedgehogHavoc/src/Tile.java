@@ -4,6 +4,8 @@ import jig.Entity;
 import jig.ResourceManager;
 
 class Tile extends Entity {
+	public DebugTile debugTile;
+	
 	private final int xPos;
 	private final int yPos;
 	private Hedgehog hedgehog;
@@ -18,6 +20,7 @@ class Tile extends Entity {
 	private boolean isBlockImmovable;
 	private boolean isGround;
 	private boolean discovered;
+	private boolean tileDebug;
 	private int score;
 	private Tile parent;
 	
@@ -38,10 +41,17 @@ class Tile extends Entity {
 		isBug = false;
 		isBlockMovable = false;
 		isBlockImmovable = false;
+		tileDebug = false;
 	}
 	
 	@Override
 	public void render(Graphics g) {
+		if (HedgehogHavoc.debug) {
+			if (tileDebug) {
+				debugTile.render(g);
+			}
+		}
+		
 		if (isHedgehog) {
 			hedgehog.render(g);
 		} else if (isBadger) {
@@ -294,6 +304,19 @@ class Tile extends Entity {
 	
 	public Tile getParent() {
 		return parent;
+	}
+	
+	public void setDebugActive(boolean value) {
+		if (value) {
+			debugTile = new DebugTile(
+					xPos,
+					yPos,
+					ResourceManager.getImage(HedgehogHavoc.HUDBACKGROUND_IMG).getHeight());
+			tileDebug = true;
+		} else {
+			debugTile = null;
+			tileDebug = false;
+		}
 	}
 	
 	/**

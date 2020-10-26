@@ -55,11 +55,14 @@ class PlayingState extends BasicGameState {
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		Input input = container.getInput();
 		HedgehogHavoc hh = (HedgehogHavoc)game;
-		hh.getFPS();
 		if (hh.lives <= 0) {
 			hh.restartGame();
+			badgerCount = 0;
+			caughtBadgers = 0;
 			game.enterState(HedgehogHavoc.PLAYINGSTATE);
 		}
+		
+		hh.getFPS();
 		
 		if (input.isKeyDown(Input.KEY_RIGHT) && hedgehogX < 22 && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
 			if (hh.grid[hedgehogX + 1][hedgehogY].getIsBlockMovable()) {
@@ -145,6 +148,7 @@ class PlayingState extends BasicGameState {
 					hh.score = 0;
 				}
 			}
+			
 			hh.second = 60;
 			spawnBadger(hh);
 		}

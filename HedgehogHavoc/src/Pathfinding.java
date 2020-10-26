@@ -57,6 +57,7 @@ class Pathfinding {
 				tiles[i][j].setDiscovered(false);
 				tiles[i][j].setParent(null);
 				tiles[i][j].setScore(0);
+				tiles[i][j].setDebugActive(false);
 			}
 		}
 	}
@@ -66,6 +67,7 @@ class Pathfinding {
 		Tile tempTile = tile;
 		while (tempTile.getParent() != null) {
 			path.add(0, tempTile);
+			tempTile.setDebugActive(true);
 			tempTile = tempTile.getParent();
 		}
 		
