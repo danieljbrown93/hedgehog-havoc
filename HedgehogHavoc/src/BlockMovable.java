@@ -6,6 +6,7 @@ class BlockMovable extends Entity {
 	private Vector velocity;
 	public int moveCount;
 	public String moveDir;
+	public boolean removeBlock;
 	
 	/**
 	 * Create a new movable block that will be movable by the player.
@@ -20,6 +21,7 @@ class BlockMovable extends Entity {
 		velocity = new Vector(0, 0);
 		moveCount = 0;
 		moveDir = "";
+		removeBlock = false;
 		antiAliasing = false;
 	}
 	

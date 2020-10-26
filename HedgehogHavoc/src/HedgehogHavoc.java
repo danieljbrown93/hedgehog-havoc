@@ -35,6 +35,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static final String BLOCK_MOVABLE_IMG = "resource/block_movable.png";
 	public static final String BLOCK_IMMOVABLE_IMG = "resource/block_immovable.png";
 	public static final String BUG_IMG = "resource/bug.png";
+	public static final String HOLE_IMG = "resource/hole.png";
 	public static final String PATH_DEBUG_IMG = "resource/path_debug.png";
 	public static final boolean debug = true;
 	public static final int BADGERCOUNT = 6;
@@ -94,6 +95,7 @@ public class HedgehogHavoc extends StateBasedGame {
 		ResourceManager.loadImage(BLOCK_MOVABLE_IMG);
 		ResourceManager.loadImage(BLOCK_IMMOVABLE_IMG);
 		ResourceManager.loadImage(BUG_IMG);
+		ResourceManager.loadImage(HOLE_IMG);
 		ResourceManager.loadImage(PATH_DEBUG_IMG);
 		
 		// Initialize entities
@@ -258,7 +260,15 @@ public class HedgehogHavoc extends StateBasedGame {
 				}
 			}
 			
-			// TODO: Implement holes and add to this level.
+			grid[2][6].setHole(new Hole(2, 6, HUDHeight));
+			grid[3][12].setBlockMovable(null);
+			grid[3][12].setHole(new Hole(3, 12, HUDHeight));
+			grid[5][5].setHole(new Hole(5, 5, HUDHeight));
+			grid[10][8].setHole(new Hole(10, 8, HUDHeight));
+			grid[12][7].setBlockMovable(null);
+			grid[12][7].setHole(new Hole(12, 7, HUDHeight));
+			grid[15][12].setBlockMovable(null);
+			grid[15][12].setHole(new Hole(15, 12, HUDHeight));
 			
 			grid[21][20].setBadger(new Badger(21, 20, HUDHeight));
 			grid[21][20].getBadger().moveSpeed = 3;
@@ -298,10 +308,20 @@ public class HedgehogHavoc extends StateBasedGame {
 						new BlockMovable(movableBlocks[i][0], movableBlocks[i][1], HUDHeight));
 			}
 			
-			// TODO: Implement holes and place them in this level.
+			grid[2][8].setHole(new Hole(2, 8, HUDHeight));
+			grid[3][12].setHole(new Hole(3, 12, HUDHeight));
+			grid[5][11].setHole(new Hole(5, 11, HUDHeight));
+			grid[7][9].setHole(new Hole(7, 9, HUDHeight));
+			grid[8][17].setHole(new Hole(8, 17, HUDHeight));
+			grid[13][6].setHole(new Hole(13, 6, HUDHeight));
+			grid[13][19].setHole(new Hole(13, 19, HUDHeight));
+			grid[15][6].setHole(new Hole(15, 6, HUDHeight));
+			grid[15][12].setHole(new Hole(15, 12, HUDHeight));
+			grid[16][5].setHole(new Hole(16, 5, HUDHeight));
+			grid[19][9].setHole(new Hole(19, 9, HUDHeight));
 			
-			grid[2][8].setBadger(new Badger(2, 8, HUDHeight));
-			grid[2][8].getBadger().moveSpeed = 3;
+			grid[2][9].setBadger(new Badger(2, 9, HUDHeight));
+			grid[2][9].getBadger().moveSpeed = 3;
 			grid[18][8].setBadger(new Badger(18, 8, HUDHeight));
 			grid[18][8].getBadger().moveSpeed = 3;
 		}

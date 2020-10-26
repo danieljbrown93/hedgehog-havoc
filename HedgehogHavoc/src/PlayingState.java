@@ -23,6 +23,7 @@ class PlayingState extends BasicGameState {
 	private int caughtBadgers;
 	private int remainingBadgers;
 	private boolean hedgehogMoved;
+	private boolean hedgehogStuck;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
@@ -38,6 +39,7 @@ class PlayingState extends BasicGameState {
 		remainingBadgers = HedgehogHavoc.BADGERCOUNT;
 		pathFinder = new Pathfinding();
 		hedgehogMoved = false;
+		hedgehogStuck = false;
 	}
 
 	@Override
@@ -76,6 +78,12 @@ class PlayingState extends BasicGameState {
 		if (remainingBadgers <= 0) {
 			changeLevel(hh, game, hh.currentLevel + 1);
 			return;
+		}
+		
+		if (hedgehogStuck && hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount <= 0) {
+			hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = 300;
+			hh.grid[hedgehogX][hedgehogY].getHedgehog().moveDir = "";
+			hedgehogStuck = false;
 		}
 		
 		hh.getFPS();
@@ -228,6 +236,10 @@ class PlayingState extends BasicGameState {
 		} else if (hh.grid[hedgehogX + 1][hedgehogY].getIsBadger()) {
 			hh.lives -= 1;
 			respawnHedgehog(hh);
+		} else if (hh.grid[hedgehogX + 1][hedgehogY].getIsHole()) {
+			hh.grid[hedgehogX + 1][hedgehogY].setHole(null);
+			hedgehogStuck = true;
+			moveRight(hh);
 		}
 	}
 	
@@ -244,6 +256,10 @@ class PlayingState extends BasicGameState {
 		} else if (hh.grid[hedgehogX - 1][hedgehogY].getIsBadger()) {
 			hh.lives -= 1;
 			respawnHedgehog(hh);
+		} else if (hh.grid[hedgehogX - 1][hedgehogY].getIsHole()) {
+			hh.grid[hedgehogX - 1][hedgehogY].setHole(null);
+			hedgehogStuck = true;
+			moveLeft(hh);
 		}
 	}
 	
@@ -260,6 +276,10 @@ class PlayingState extends BasicGameState {
 		} else if (hh.grid[hedgehogX][hedgehogY - 1].getIsBadger()) {
 			hh.lives -= 1;
 			respawnHedgehog(hh);
+		} else if (hh.grid[hedgehogX][hedgehogY - 1].getIsHole()) {
+			hh.grid[hedgehogX][hedgehogY - 1].setHole(null);
+			hedgehogStuck = true;
+			moveUp(hh);
 		}
 	}
 	
@@ -276,6 +296,10 @@ class PlayingState extends BasicGameState {
 		} else if (hh.grid[hedgehogX][hedgehogY + 1].getIsBadger()) {
 			hh.lives -= 1;
 			respawnHedgehog(hh);
+		} else if (hh.grid[hedgehogX][hedgehogY + 1].getIsHole()) {
+			hh.grid[hedgehogX][hedgehogY + 1].setHole(null);
+			hedgehogStuck = true;
+			moveDown(hh);
 		}
 	}
 	
@@ -604,21 +628,29 @@ class PlayingState extends BasicGameState {
 		if (hh.grid[x][y].getIsBlockMovable()) {
 			if (moveBlock(hh, x, y, direction)) {				
 				if (direction.equals("R")) {
-					hh.grid[x + 1][y].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
-					hh.grid[x + 1][y].getBlockMovable().moveDir = "R";
-					hh.grid[x + 1][y].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedWidth();
+					if (!hh.grid[x + 1][y].getIsHole()) {
+						hh.grid[x + 1][y].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
+						hh.grid[x + 1][y].getBlockMovable().moveDir = "R";
+						hh.grid[x + 1][y].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedWidth();
+					}
 				} else if (direction.equals("L")) {
-					hh.grid[x - 1][y].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
-					hh.grid[x - 1][y].getBlockMovable().moveDir = "L";
-					hh.grid[x - 1][y].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedWidth();
+					if (!hh.grid[x - 1][y].getIsHole()) {
+						hh.grid[x - 1][y].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
+						hh.grid[x - 1][y].getBlockMovable().moveDir = "L";
+						hh.grid[x - 1][y].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedWidth();
+					}
 				} else if (direction.equals("U")) {
-					hh.grid[x][y - 1].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
-					hh.grid[x][y - 1].getBlockMovable().moveDir = "U";
-					hh.grid[x][y - 1].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedHeight();
+					if (!hh.grid[x][y - 1].getIsHole()) {
+						hh.grid[x][y - 1].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
+						hh.grid[x][y - 1].getBlockMovable().moveDir = "U";
+						hh.grid[x][y - 1].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedHeight();
+					}
 				} else if (direction.equals("D")) {
-					hh.grid[x][y + 1].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
-					hh.grid[x][y + 1].getBlockMovable().moveDir = "D";
-					hh.grid[x][y + 1].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedHeight();
+					if (!hh.grid[x][y + 1].getIsHole()) {
+						hh.grid[x][y + 1].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
+						hh.grid[x][y + 1].getBlockMovable().moveDir = "D";
+						hh.grid[x][y + 1].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedHeight();
+					}
 				}
 
 				hh.grid[x][y].setBlockMovable(null);
@@ -626,7 +658,7 @@ class PlayingState extends BasicGameState {
 			} else {
 				return false;
 			}
-		} else if (hh.grid[x][y].getIsGround() || hh.grid[x][y].getIsBug()) {
+		} else if (hh.grid[x][y].getIsGround() || hh.grid[x][y].getIsBug() || hh.grid[x][y].getIsHole()) {
 			return true;
 		} else {
 			return false;

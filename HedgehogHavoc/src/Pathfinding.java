@@ -56,7 +56,6 @@ class Pathfinding {
 			for (int j = 0; j < 23; j++) {
 				tiles[i][j].setDiscovered(false);
 				tiles[i][j].setParent(null);
-				tiles[i][j].setScore(0);
 				tiles[i][j].setDebugActive(false);
 			}
 		}

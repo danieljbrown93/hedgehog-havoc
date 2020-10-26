@@ -11,17 +11,18 @@ class Tile extends Entity {
 	private Hedgehog hedgehog;
 	private Badger badger;
 	private Bug bug;
+	private Hole hole;
 	private BlockMovable blockMovable;
 	private BlockImmovable blockImmovable;
 	private boolean isHedgehog;
 	private boolean isBadger;
 	private boolean isBug;
+	private boolean isHole;
 	private boolean isBlockMovable;
 	private boolean isBlockImmovable;
 	private boolean isGround;
 	private boolean discovered;
 	private boolean tileDebug;
-	private int score;
 	private Tile parent;
 	
 	/**
@@ -32,13 +33,13 @@ class Tile extends Entity {
 	public Tile(final int x, final int y) {
 		xPos = x;
 		yPos = y;
-		score = 0;
 		discovered = false;
 		parent = null;
 		isGround = true;
 		isHedgehog = false;
 		isBadger = false;
 		isBug = false;
+		isHole = false;
 		isBlockMovable = false;
 		isBlockImmovable = false;
 		tileDebug = false;
@@ -62,6 +63,8 @@ class Tile extends Entity {
 			blockImmovable.render(g);
 		} else if (isBug) {
 			bug.render(g);
+		} else if (isHole) {
+			hole.render(g);
 		}
 	}
 	
@@ -120,6 +123,21 @@ class Tile extends Entity {
 		}
 	}
 	
+	public Hole getHole() {
+		return hole;
+	}
+	
+	public void setHole(Hole h) {
+		if (h == null) {
+			hole.removeImage(ResourceManager.getImage(HedgehogHavoc.HOLE_IMG));
+			hole = null;
+			setIsHole(false);
+		} else {
+			hole = h;
+			setIsHole(true);
+		}
+	}
+	
 	public BlockMovable getBlockMovable() {
 		return blockMovable;
 	}
@@ -159,6 +177,7 @@ class Tile extends Entity {
 			isHedgehog = true;
 			isBadger = false;
 			isBug = false;
+			isHole = false;
 			isGround = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
@@ -166,6 +185,7 @@ class Tile extends Entity {
 			isHedgehog = false;
 			isBadger = false;
 			isBug = false;
+			isHole = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
 			isGround = true;
@@ -181,6 +201,7 @@ class Tile extends Entity {
 			isBadger = true;
 			isHedgehog = false;
 			isBug = false;
+			isHole = false;
 			isGround = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
@@ -188,6 +209,7 @@ class Tile extends Entity {
 			isBadger = false;
 			isHedgehog = false;
 			isBug = false;
+			isHole = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
 			isGround = true;
@@ -201,12 +223,38 @@ class Tile extends Entity {
 	public void setIsBug(boolean value) {
 		if (value) {
 			isBug = true;
+			isHole = false;
 			isHedgehog = false;
 			isBadger = false;
 			isGround = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
 		} else {
+			isBug = false;
+			isHole = false;
+			isBadger = false;
+			isHedgehog = false;
+			isBlockMovable = false;
+			isBlockImmovable = false;
+			isGround = true;
+		}
+	}
+	
+	public boolean getIsHole() {
+		return isHole;
+	}
+	
+	public void setIsHole(boolean value) {
+		if (value) {
+			isHole = true;
+			isBug = false;
+			isHedgehog = false;
+			isBadger = false;
+			isGround = false;
+			isBlockMovable = false;
+			isBlockImmovable = false;
+		} else {
+			isHole = false;
 			isBug = false;
 			isBadger = false;
 			isHedgehog = false;
@@ -227,6 +275,7 @@ class Tile extends Entity {
 			isHedgehog = false;
 			isBadger = false;
 			isBug = false;
+			isHole = false;
 			isGround = false;
 		} else {
 			isBlockMovable = false;
@@ -234,6 +283,7 @@ class Tile extends Entity {
 			isHedgehog = false;
 			isBadger = false;
 			isBug = false;
+			isHole = false;
 			isGround = true;
 		}
 	}
@@ -249,6 +299,7 @@ class Tile extends Entity {
 			isHedgehog = false;
 			isBadger = false;
 			isBug = false;
+			isHole = false;
 			isGround = false;
 		} else {
 			isBlockImmovable = false;
@@ -256,6 +307,7 @@ class Tile extends Entity {
 			isHedgehog = false;
 			isBadger = false;
 			isBug = false;
+			isHole = false;
 			isGround = true;
 		}
 	}
@@ -270,6 +322,7 @@ class Tile extends Entity {
 			isHedgehog = false;
 			isBadger = false;
 			isBug = false;
+			isHole = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
 		} else {
@@ -277,17 +330,10 @@ class Tile extends Entity {
 			isHedgehog = false;
 			isBadger = false;
 			isBug = false;
+			isHole = false;
 			isBlockMovable = false;
 			isBlockImmovable = false;
 		}
-	}
-	
-	public void setScore(int s) {
-		score = s;
-	}
-	
-	public int getScore() {
-		return score;
 	}
 	
 	public void setDiscovered(boolean value) {
