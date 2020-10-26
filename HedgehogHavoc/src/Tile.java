@@ -326,53 +326,59 @@ class Tile extends Entity {
 	public void update(final int delta) {
 		if (isHedgehog) {
 			if (hedgehog.moveCount > 0) {
-				hedgehog.moveCount -= 2;
+				int moveAmount = 3;
+				if (hedgehog.moveCount < moveAmount) moveAmount = hedgehog.moveCount;
+				hedgehog.moveCount -= moveAmount;
 				if (hedgehog.moveDir.equals("R")) {
-					hedgehog.setX(hedgehog.getX() + 2);
+					hedgehog.setX(hedgehog.getX() + moveAmount);
 				} else if (hedgehog.moveDir.equals("L")) {
-					hedgehog.setX(hedgehog.getX() - 2);
+					hedgehog.setX(hedgehog.getX() - moveAmount);
 				} else if (hedgehog.moveDir.equals("U")) {
-					hedgehog.setY(hedgehog.getY() - 2);
+					hedgehog.setY(hedgehog.getY() - moveAmount);
 				} else if (hedgehog.moveDir.equals("D")) {
-					hedgehog.setY(hedgehog.getY() + 2);
+					hedgehog.setY(hedgehog.getY() + moveAmount);
 				}
 			}
 		} else if (isBadger) {
 			if (badger.moveCount > 0) {
-				badger.moveCount -= 1;
+				int moveAmount = badger.moveSpeed;
+				if (badger.moveCount < moveAmount) moveAmount = badger.moveCount;
+				badger.moveCount -= moveAmount;
 				if (badger.moveDir.equals("R")) {
-					badger.setX(badger.getX() + 1);
+					badger.setX(badger.getX() + moveAmount);
 				} else if (badger.moveDir.equals("L")) {
-					badger.setX(badger.getX() - 1);
+					badger.setX(badger.getX() - moveAmount);
 				} else if (badger.moveDir.equals("U")) {
-					badger.setY(badger.getY() - 1);
+					badger.setY(badger.getY() - moveAmount);
 				} else if (badger.moveDir.equals("D")) {
-					badger.setY(badger.getY() + 1);
+					badger.setY(badger.getY() + moveAmount);
 				} else if (badger.moveDir.equals("DL")) {
-					badger.setX(badger.getX() - 1);
-					badger.setY(badger.getY() + 1);
+					badger.setX(badger.getX() - moveAmount);
+					badger.setY(badger.getY() + moveAmount);
 				} else if (badger.moveDir.equals("DR")) {
-					badger.setX(badger.getX() + 1);
-					badger.setY(badger.getY() + 1);
+					badger.setX(badger.getX() + moveAmount);
+					badger.setY(badger.getY() + moveAmount);
 				} else if (badger.moveDir.equals("UR")) {
-					badger.setX(badger.getX() + 1);
-					badger.setY(badger.getY() - 1);
+					badger.setX(badger.getX() + moveAmount);
+					badger.setY(badger.getY() - moveAmount);
 				} else if (badger.moveDir.equals("UL")) {
-					badger.setX(badger.getX() - 1);
-					badger.setY(badger.getY() - 1);
+					badger.setX(badger.getX() - moveAmount);
+					badger.setY(badger.getY() - moveAmount);
 				}
 			}
 		} else if (isBlockMovable) {
 			if (blockMovable.moveCount > 0) {
-				blockMovable.moveCount -= 2;
+				int moveAmount = 3;
+				if (blockMovable.moveCount < moveAmount) moveAmount = blockMovable.moveCount;
+				blockMovable.moveCount -= moveAmount;
 				if (blockMovable.moveDir.equals("R")) {
-					blockMovable.setX(blockMovable.getX() + 2);
+					blockMovable.setX(blockMovable.getX() + moveAmount);
 				} else if (blockMovable.moveDir.equals("L")) {
-					blockMovable.setX(blockMovable.getX() - 2);
+					blockMovable.setX(blockMovable.getX() - moveAmount);
 				} else if (blockMovable.moveDir.equals("U")) {
-					blockMovable.setY(blockMovable.getY() - 2);
+					blockMovable.setY(blockMovable.getY() - moveAmount);
 				} else if (blockMovable.moveDir.equals("D")) {
-					blockMovable.setY(blockMovable.getY() + 2);
+					blockMovable.setY(blockMovable.getY() + moveAmount);
 				}
 			}
 		}

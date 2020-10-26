@@ -6,6 +6,7 @@ import jig.ResourceManager;
 
 class Badger extends Entity {
 	public boolean caught;
+	public int moveSpeed;
 	public int moveCount;
 	public String moveDir;
 	public List<Tile> path;
@@ -21,6 +22,7 @@ class Badger extends Entity {
 				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.BADGERRIGHT_IMG).getHeight() / 2) + HUDOffset);
 		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.BADGERRIGHT_IMG));
 		moveDir = "";
+		moveSpeed = 1;
 		caught = false;
 		path = new ArrayList<Tile>();
 		antiAliasing = false;
