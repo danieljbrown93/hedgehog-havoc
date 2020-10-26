@@ -4,8 +4,8 @@ import jig.Entity;
 import jig.ResourceManager;
 
 class Tile extends Entity {
-	private int xPos;
-	private int yPos;
+	private final int xPos;
+	private final int yPos;
 	private Hedgehog hedgehog;
 	private Badger badger;
 	private Bug bug;
@@ -17,6 +17,9 @@ class Tile extends Entity {
 	private boolean isBlockMovable;
 	private boolean isBlockImmovable;
 	private boolean isGround;
+	private boolean discovered;
+	private int score;
+	private Tile parent;
 	
 	/**
 	 * Create a new movable block that will be movable by the player.
@@ -26,6 +29,9 @@ class Tile extends Entity {
 	public Tile(final int x, final int y) {
 		xPos = x;
 		yPos = y;
+		score = 0;
+		discovered = false;
+		parent = null;
 		isGround = true;
 		isHedgehog = false;
 		isBadger = false;
@@ -49,20 +55,12 @@ class Tile extends Entity {
 		}
 	}
 	
-	public int getXPos() {
+	public final int getXPos() {
 		return xPos;
 	}
 	
-	public int getYPos() {
+	public final int getYPos() {
 		return yPos;
-	}
-	
-	public void setXPos(int x) {
-		xPos = x;
-	}
-	
-	public void setYPos(int y) {
-		yPos = y;
 	}
 	
 	public Hedgehog getHedgehog() {
@@ -272,6 +270,30 @@ class Tile extends Entity {
 			isBlockMovable = false;
 			isBlockImmovable = false;
 		}
+	}
+	
+	public void setScore(int s) {
+		score = s;
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	
+	public void setDiscovered(boolean value) {
+		discovered = value;
+	}
+	
+	public boolean isDiscovered() {
+		return discovered;
+	}
+	
+	public void setParent(Tile p) {
+		parent = p;
+	}
+	
+	public Tile getParent() {
+		return parent;
 	}
 	
 	/**

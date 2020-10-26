@@ -12,7 +12,7 @@
 
 # Open Issues
 
-- **[10]** Add Dijkstra's Algorithm to the badgers
+- **[10]** Add path finding algorithm to the badgers
 - **[11]** Add a pause menu
 - **[12]** Add levels 2 and 3, make badgers faster
 - **[13]** Add hole entity

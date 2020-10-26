@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 import jig.Entity;
 import jig.ResourceManager;
 
@@ -5,6 +8,7 @@ class Badger extends Entity {
 	public boolean caught;
 	public int moveCount;
 	public String moveDir;
+	public List<Tile> path;
 	
 	/**
 	 * Create a new Hedgehog that will be controlled by the player.
@@ -18,6 +22,7 @@ class Badger extends Entity {
 		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.BADGERRIGHT_IMG));
 		moveDir = "";
 		caught = false;
+		path = new ArrayList<Tile>();
 		antiAliasing = false;
 	}
 	

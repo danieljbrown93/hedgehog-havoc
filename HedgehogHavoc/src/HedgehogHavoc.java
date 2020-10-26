@@ -46,6 +46,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	
 	Tile[][] grid;
 	Hedgehog hedgehog;
+	Graphics graphics;
 	
 	private static AppGameContainer app;
 
@@ -104,6 +105,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	}
 	
 	public void renderStats(Graphics g) {
+		this.graphics = g;
 		Date tempTime = new Date();
 		int tempSecond = (int) ((tempTime.getTime() - previousTime) / 1000);
 		if (tempSecond >= 1) {
