@@ -308,10 +308,20 @@ public class HedgehogHavoc extends StateBasedGame {
 						new BlockMovable(movableBlocks[i][0], movableBlocks[i][1], HUDHeight));
 			}
 			
-			// TODO: Implement holes and place them in this level.
+			grid[2][8].setHole(new Hole(2, 8, HUDHeight));
+			grid[3][12].setHole(new Hole(3, 12, HUDHeight));
+			grid[5][11].setHole(new Hole(5, 11, HUDHeight));
+			grid[7][9].setHole(new Hole(7, 9, HUDHeight));
+			grid[8][17].setHole(new Hole(8, 17, HUDHeight));
+			grid[13][6].setHole(new Hole(13, 6, HUDHeight));
+			grid[13][19].setHole(new Hole(13, 19, HUDHeight));
+			grid[15][6].setHole(new Hole(15, 6, HUDHeight));
+			grid[15][12].setHole(new Hole(15, 12, HUDHeight));
+			grid[16][5].setHole(new Hole(16, 5, HUDHeight));
+			grid[19][9].setHole(new Hole(19, 9, HUDHeight));
 			
-			grid[2][8].setBadger(new Badger(2, 8, HUDHeight));
-			grid[2][8].getBadger().moveSpeed = 3;
+			grid[2][9].setBadger(new Badger(2, 9, HUDHeight));
+			grid[2][9].getBadger().moveSpeed = 3;
 			grid[18][8].setBadger(new Badger(18, 8, HUDHeight));
 			grid[18][8].getBadger().moveSpeed = 3;
 		}

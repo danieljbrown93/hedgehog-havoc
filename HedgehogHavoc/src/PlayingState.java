@@ -628,21 +628,29 @@ class PlayingState extends BasicGameState {
 		if (hh.grid[x][y].getIsBlockMovable()) {
 			if (moveBlock(hh, x, y, direction)) {				
 				if (direction.equals("R")) {
-					hh.grid[x + 1][y].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
-					hh.grid[x + 1][y].getBlockMovable().moveDir = "R";
-					hh.grid[x + 1][y].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedWidth();
+					if (!hh.grid[x + 1][y].getIsHole()) {
+						hh.grid[x + 1][y].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
+						hh.grid[x + 1][y].getBlockMovable().moveDir = "R";
+						hh.grid[x + 1][y].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedWidth();
+					}
 				} else if (direction.equals("L")) {
-					hh.grid[x - 1][y].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
-					hh.grid[x - 1][y].getBlockMovable().moveDir = "L";
-					hh.grid[x - 1][y].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedWidth();
+					if (!hh.grid[x - 1][y].getIsHole()) {
+						hh.grid[x - 1][y].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
+						hh.grid[x - 1][y].getBlockMovable().moveDir = "L";
+						hh.grid[x - 1][y].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedWidth();
+					}
 				} else if (direction.equals("U")) {
-					hh.grid[x][y - 1].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
-					hh.grid[x][y - 1].getBlockMovable().moveDir = "U";
-					hh.grid[x][y - 1].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedHeight();
+					if (!hh.grid[x][y - 1].getIsHole()) {
+						hh.grid[x][y - 1].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
+						hh.grid[x][y - 1].getBlockMovable().moveDir = "U";
+						hh.grid[x][y - 1].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedHeight();
+					}
 				} else if (direction.equals("D")) {
-					hh.grid[x][y + 1].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
-					hh.grid[x][y + 1].getBlockMovable().moveDir = "D";
-					hh.grid[x][y + 1].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedHeight();
+					if (!hh.grid[x][y + 1].getIsHole()) {
+						hh.grid[x][y + 1].setBlockMovable(hh.grid[x][y].getBlockMovable().clone(hh.grid[x][y].getBlockMovable()));
+						hh.grid[x][y + 1].getBlockMovable().moveDir = "D";
+						hh.grid[x][y + 1].getBlockMovable().moveCount = (int) hh.grid[x][y].getBlockMovable().getCoarseGrainedHeight();
+					}
 				}
 
 				hh.grid[x][y].setBlockMovable(null);
@@ -650,7 +658,7 @@ class PlayingState extends BasicGameState {
 			} else {
 				return false;
 			}
-		} else if (hh.grid[x][y].getIsGround() || hh.grid[x][y].getIsBug()) {
+		} else if (hh.grid[x][y].getIsGround() || hh.grid[x][y].getIsBug() || hh.grid[x][y].getIsHole()) {
 			return true;
 		} else {
 			return false;
