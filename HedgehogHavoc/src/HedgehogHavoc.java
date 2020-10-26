@@ -26,6 +26,8 @@ public class HedgehogHavoc extends StateBasedGame {
 	// Resources
 	public static final String BACKGROUND_IMG = "resource/background.png";
 	public static final String HUDBACKGROUND_IMG = "resource/hudbackground.png";
+	public static final String PAUSEBACKGROUND_IMG = "resource/pause_background.png";
+	public static final String LOGO_IMG = "resource/hedgehoghavoc_logo.png";
 	public static final String HEDGEHOGRIGHT_IMG = "resource/hedgehog_right.png";
 	public static final String HEDGEHOGLEFT_IMG = "resource/hedgehog_left.png";
 	public static final String BADGERRIGHT_IMG = "resource/badger_right.png";
@@ -80,6 +82,8 @@ public class HedgehogHavoc extends StateBasedGame {
 		// Pre-loading all image resources
 		ResourceManager.loadImage(BACKGROUND_IMG);
 		ResourceManager.loadImage(HUDBACKGROUND_IMG);
+		ResourceManager.loadImage(PAUSEBACKGROUND_IMG);
+		ResourceManager.loadImage(LOGO_IMG);
 		ResourceManager.loadImage(HEDGEHOGLEFT_IMG);
 		ResourceManager.loadImage(HEDGEHOGRIGHT_IMG);
 		ResourceManager.loadImage(BADGERLEFT_IMG);

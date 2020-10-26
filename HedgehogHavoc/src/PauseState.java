@@ -1,4 +1,5 @@
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -24,7 +25,6 @@ class PauseState extends BasicGameState {
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		HedgehogHavoc hh = (HedgehogHavoc)game;
 		pauseTimer = 10;
 	}
 	
@@ -32,8 +32,20 @@ class PauseState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		HedgehogHavoc hh = (HedgehogHavoc)game;
 		g.setColor(Color.white);
-		g.drawString("Paused", 10, 10);
-		g.drawString("Escape: Return to game", 10, 30);
+		g.drawImage(ResourceManager.getImage(HedgehogHavoc.PAUSEBACKGROUND_IMG), 0, 0);
+		g.drawImage(ResourceManager.getImage(HedgehogHavoc.LOGO_IMG), 0, 0);
+		
+		int logoGap = ResourceManager.getImage(HedgehogHavoc.LOGO_IMG).getHeight();
+		Font font = g.getFont();
+		int fontHeight = font.getHeight("test");
+		g.drawString(
+				"Paused",
+				(hh.ScreenWidth / 2) - (font.getWidth("Paused") / 2),
+				logoGap + fontHeight);
+		g.drawString(
+				"Escape: Return to game",
+				(hh.ScreenWidth / 2) - (font.getWidth("Escape: Return to game") / 2),
+				logoGap + fontHeight * 2);
 	}
 
 	@Override

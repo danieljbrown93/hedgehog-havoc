@@ -22,7 +22,6 @@ class PlayingState extends BasicGameState {
 	private int badgerCount;
 	private int caughtBadgers;
 	private boolean hedgehogMoved;
-	private boolean paused;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
@@ -34,7 +33,6 @@ class PlayingState extends BasicGameState {
 		caughtBadgers = 0;
 		pathFinder = new Pathfinding();
 		hedgehogMoved = false;
-		paused = false;
 	}
 
 	@Override
@@ -59,11 +57,6 @@ class PlayingState extends BasicGameState {
 	public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 		Input input = container.getInput();
 		HedgehogHavoc hh = (HedgehogHavoc)game;
-		
-		if (paused) {
-			resume(hh);
-			paused = false;
-		}
 		
 		if (hh.lives <= 0) {
 			hh.restartGame();
@@ -132,7 +125,8 @@ class PlayingState extends BasicGameState {
 			}
 		} else if (input.isKeyDown(Input.KEY_ESCAPE) && pauseTimer <= 0) {
 			pauseTimer = 10;
-			pause(game);
+			game.enterState(HedgehogHavoc.PAUSESTATE);
+			return;
 		}
 		
 		for (int i = 0; i < 23; i++) {
@@ -169,16 +163,6 @@ class PlayingState extends BasicGameState {
 		if (pauseTimer > 0) {
 			pauseTimer -= 1;
 		}
-	}
-	
-	private void resume(HedgehogHavoc hh) {
-		
-	}
-	
-	private void pause(StateBasedGame game) {
-		HedgehogHavoc hh = (HedgehogHavoc) game;
-		paused = true;
-		game.enterState(HedgehogHavoc.PAUSESTATE);
 	}
 	
 	private void respawnHedgehog(HedgehogHavoc hh) {
