@@ -37,6 +37,9 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static final String BUG_IMG = "resource/bug.png";
 	public static final String PATH_DEBUG_IMG = "resource/path_debug.png";
 	public static final boolean debug = true;
+	public static final int BADGERCOUNT = 6;
+	public static final int MAXBADGERS = 6;
+	public static final int TIMERCOUNT = 60;
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
@@ -104,7 +107,7 @@ public class HedgehogHavoc extends StateBasedGame {
 		
 		Date tempTime = new Date();
 		previousTime = tempTime.getTime();
-		second = 60;
+		second = TIMERCOUNT;
 		currentLevel = 1;
 		score = 0;
 		lives = 3;
@@ -148,6 +151,159 @@ public class HedgehogHavoc extends StateBasedGame {
 			}
 			
 			grid[4][3].setBadger(new Badger(4, 3, HUDHeight));
+		} else if (currentLevel == 2) {
+			for (int i = 4; i < 19; i++) {
+				for (int j = 4; j < 19; j++) {
+					// Making sure we're not overwriting the hedgehog with this if-statement.
+					if (i != 11 || j != 11) {
+						grid[i][j].setBlockMovable(new BlockMovable(i, j, HUDHeight));
+					}
+				}
+			}
+			
+			for (int i = 0; i < 23; i++) {
+				grid[i][0].setBlockImmovable(new BlockImmovable(i, 0, HUDHeight));
+				grid[0][i].setBlockImmovable(new BlockImmovable(0, i, HUDHeight));
+				grid[22][i].setBlockImmovable(new BlockImmovable(22, i, HUDHeight));
+				grid[i][22].setBlockImmovable(new BlockImmovable(i, 22, HUDHeight));
+			}
+			
+			grid[1][10].setBlockImmovable(new BlockImmovable(1, 10, HUDHeight));
+			grid[1][12].setBlockImmovable(new BlockImmovable(1, 12, HUDHeight));
+			grid[2][14].setBlockImmovable(new BlockImmovable(2, 14, HUDHeight));
+			grid[5][6].setBlockImmovable(new BlockImmovable(5, 6, HUDHeight));
+			grid[7][2].setBlockImmovable(new BlockImmovable(7, 2, HUDHeight));
+			grid[8][8].setBlockImmovable(new BlockImmovable(8, 8, HUDHeight));
+			grid[9][14].setBlockImmovable(new BlockImmovable(9, 14, HUDHeight));
+			grid[10][9].setBlockImmovable(new BlockImmovable(10, 9, HUDHeight));
+			grid[14][6].setBlockImmovable(new BlockImmovable(14, 6, HUDHeight));
+			grid[14][11].setBlockImmovable(new BlockImmovable(14, 11, HUDHeight));
+			grid[14][14].setBlockImmovable(new BlockImmovable(14, 14, HUDHeight));
+			grid[14][17].setBlockImmovable(new BlockImmovable(14, 17, HUDHeight));
+			grid[16][14].setBlockImmovable(new BlockImmovable(16, 14, HUDHeight));
+			grid[18][14].setBlockImmovable(new BlockImmovable(18, 14, HUDHeight));
+			grid[18][17].setBlockImmovable(new BlockImmovable(18, 17, HUDHeight));
+			grid[20][5].setBlockImmovable(new BlockImmovable(20, 5, HUDHeight));
+			grid[20][12].setBlockImmovable(new BlockImmovable(20, 12, HUDHeight));
+			
+			grid[11][20].setBadger(new Badger(11, 20, HUDHeight));
+			grid[11][20].getBadger().moveSpeed = 2;
+			grid[20][18].setBadger(new Badger(20, 18, HUDHeight));
+			grid[20][18].getBadger().moveSpeed = 2;
+		} else if (currentLevel == 3) {
+			for (int i = 0; i < 23; i++) {
+				grid[i][0].setBlockImmovable(new BlockImmovable(i, 0, HUDHeight));
+				grid[0][i].setBlockImmovable(new BlockImmovable(0, i, HUDHeight));
+				grid[22][i].setBlockImmovable(new BlockImmovable(22, i, HUDHeight));
+				grid[i][22].setBlockImmovable(new BlockImmovable(i, 22, HUDHeight));
+			}
+			
+			int[][] immovableBlocks = {
+					{3, 4}, {5, 15}, {7, 17}, {10, 6}, {11, 12}, {12, 5}, {12, 8}, {14, 12},
+					{15, 8}, {16, 19}, {17, 4}, {18, 9}, {20, 7}};
+			
+			int[][] movableBlocks = {
+					{1, 3}, {1, 4}, {1, 7}, {1, 9}, {1, 10}, {1, 15}, {1, 20},
+					{2, 1}, {2, 2}, {2, 3}, {2, 6}, {2, 8}, {2, 12}, {2, 13}, {2, 16}, {2, 19}, {2, 20},
+					{3, 8}, {3, 9}, {3, 10}, {3, 13}, {3, 16}, {3, 19}, {3, 20},
+					{4, 8}, {4, 9}, {4, 10}, {4, 13}, {4, 16}, {4, 18},
+					{5, 3}, {5, 4}, {5, 7}, {5, 8}, {5, 12}, {5, 16}, {5, 17}, {5, 18},
+					{6, 2}, {6, 8}, {6, 11}, {6, 12}, {6, 14}, {6, 16}, {6, 18},
+					{7, 2}, {7, 3}, {7, 16}, {7, 20},
+					{8, 4}, {8, 8}, {8, 13}, {8, 17},
+					{9, 1}, {9, 4}, {9, 5}, {9, 7}, {9, 11}, {9, 14}, {9, 20},
+					{10, 1}, {10, 2}, {10, 4}, {10, 5}, {10, 10}, {10, 14}, {10, 16}, {10, 17}, {10, 20},
+					{11, 1}, {11, 2}, {11, 4}, {11, 15}, {11, 17},
+					{12, 1}, {12, 2}, {12, 3}, {12, 6}, {12, 9}, {12, 15}, {12, 19},
+					{13, 7}, {13, 8}, {13, 9}, {13, 10}, {13, 12}, {13, 17},
+					{14, 6}, {14, 7}, {14, 9}, {14, 11}, {14, 19},
+					{15, 2}, {15, 4}, {15, 5}, {15, 10}, {15, 11}, {15, 16}, {15, 18},
+					{16, 3}, {16, 4}, {16, 8}, {16, 9}, {16, 11}, {16, 12}, {16, 14}, {16, 17},
+					{17, 2}, {17, 3}, {17, 8},
+					{18, 1}, {18, 2}, {18, 6}, {18, 14}, {18, 16}, {18, 20},
+					{19, 3}, {19, 6}, {19, 7}, {19, 13}, {19, 15}, {19, 17}, {19, 20},
+					{20, 1}, {20, 5}, {20, 9}, {20, 14}, {20, 16}, {20, 17}, {20, 20}};
+			
+			for(int i = 0; i < immovableBlocks.length; i++) {
+				grid[immovableBlocks[i][0]][immovableBlocks[i][1]].setBlockImmovable(
+						new BlockImmovable(immovableBlocks[i][0], immovableBlocks[i][1], HUDHeight));
+			}
+			
+			for(int i = 0; i < movableBlocks.length; i++) {
+				grid[movableBlocks[i][0]][movableBlocks[i][1]].setBlockMovable(
+						new BlockMovable(movableBlocks[i][0], movableBlocks[i][1], HUDHeight));
+			}
+			
+			grid[2][20].setBadger(new Badger(2, 20, HUDHeight));
+			grid[2][20].getBadger().moveSpeed = 3;
+			grid[11][20].setBadger(new Badger(11, 20, HUDHeight));
+			grid[11][20].getBadger().moveSpeed = 3;
+			grid[21][20].setBadger(new Badger(21, 20, HUDHeight));
+			grid[21][20].getBadger().moveSpeed = 3;
+		} else if (currentLevel == 4) {
+			for (int i = 0; i < 23; i++) {
+				grid[i][0].setBlockImmovable(new BlockImmovable(i, 0, HUDHeight));
+				grid[0][i].setBlockImmovable(new BlockImmovable(0, i, HUDHeight));
+				grid[22][i].setBlockImmovable(new BlockImmovable(22, i, HUDHeight));
+				grid[i][22].setBlockImmovable(new BlockImmovable(i, 22, HUDHeight));
+			}
+			
+			for (int i = 2; i < 21; i++) {
+				for (int j = 2; j < 21; j++) {
+					if (i % 2 == 0 && j % 2 != 0) {
+						grid[i][j].setBlockMovable(new BlockMovable(i, j, HUDHeight));
+					} else if (i % 2 != 0 && j % 2 == 0) {
+						grid[i][j].setBlockMovable(new BlockMovable(i, j, HUDHeight));
+					}
+				}
+			}
+			
+			// TODO: Implement holes and add to this level.
+			
+			grid[21][20].setBadger(new Badger(21, 20, HUDHeight));
+			grid[21][20].getBadger().moveSpeed = 3;
+		} else if (currentLevel == 5) {
+			for (int i = 0; i < 23; i++) {
+				grid[i][0].setBlockImmovable(new BlockImmovable(i, 0, HUDHeight));
+				grid[0][i].setBlockImmovable(new BlockImmovable(0, i, HUDHeight));
+				grid[22][i].setBlockImmovable(new BlockImmovable(22, i, HUDHeight));
+				grid[i][22].setBlockImmovable(new BlockImmovable(i, 22, HUDHeight));
+			}
+			
+			int[][] immovableBlocks = {{1, 19}, {2, 5}, {2, 7}, {2, 9}, {2, 17}, {3, 2}, {3, 3},
+					{4, 10}, {4, 13}, {5, 7}, {5, 8}, {5, 16}, {6, 5}, {6, 8}, {6, 17},
+					{7, 2}, {7, 13}, {7, 17}, {7, 18}, {7, 20}, {8, 9}, {8, 11}, {8, 18},
+					{9, 10}, {10, 4}, {10, 12}, {10, 15}, {10, 20}, {11, 19},
+					{12, 7}, {12, 11}, {12, 14}, {12, 16}, {12, 19}, {13, 2}, {13, 12}, {13, 17},
+					{14, 1}, {15, 11}, {15, 18}, {15, 19}, {16, 7}, {16, 10},
+					{17, 3}, {17, 7}, {17, 8}, {17, 11}, {17, 15}, {17, 16}, {18, 10}, {18, 20},
+					{19, 3}, {19, 16}, {19, 20}, {20, 4}, {20, 16}};
+			
+			int[][] movableBlocks = {{2, 19}, {3, 4}, {3, 6}, {3, 7}, {3, 8}, {3, 9}, {3, 11}, {3, 14}, {3, 15},
+					{4, 12}, {4, 15}, {4, 20}, {5, 17}, {6, 4}, {6, 13}, {6, 14}, {6, 15}, {6, 16}, {6, 20},
+					{7, 7}, {7, 8}, {8, 3}, {8, 7}, {8, 17}, {9, 1}, {9, 9},
+					{10, 2}, {10, 7}, {10, 8}, {10, 9}, {10, 13}, {10, 17}, {11, 1}, {11, 5}, {11, 9},
+					{12, 4}, {12, 12}, {12, 15}, {13, 3}, {13, 16}, {13, 19}, {13, 20},
+					{14, 3}, {14, 5}, {14, 12}, {14, 15}, {14, 20}, {15, 9}, {15, 17},
+					{16, 11}, {16, 15}, {17, 12}, {17, 14}, {17, 17}, {17, 20},
+					{18, 5}, {20, 7}, {20, 9}, {20, 13}, {20, 15}, {20, 18}};
+			
+			for(int i = 0; i < immovableBlocks.length; i++) {
+				grid[immovableBlocks[i][0]][immovableBlocks[i][1]].setBlockImmovable(
+						new BlockImmovable(immovableBlocks[i][0], immovableBlocks[i][1], HUDHeight));
+			}
+			
+			for(int i = 0; i < movableBlocks.length; i++) {
+				grid[movableBlocks[i][0]][movableBlocks[i][1]].setBlockMovable(
+						new BlockMovable(movableBlocks[i][0], movableBlocks[i][1], HUDHeight));
+			}
+			
+			// TODO: Implement holes and place them in this level.
+			
+			grid[2][8].setBadger(new Badger(2, 8, HUDHeight));
+			grid[2][8].getBadger().moveSpeed = 3;
+			grid[18][8].setBadger(new Badger(18, 8, HUDHeight));
+			grid[18][8].getBadger().moveSpeed = 3;
 		}
 	}
 	
@@ -163,13 +319,31 @@ public class HedgehogHavoc extends StateBasedGame {
 		
 		Date tempTime = new Date();
 		previousTime = tempTime.getTime();
-		second = 60;
+		second = TIMERCOUNT;
 		currentLevel = 1;
 		score = 0;
 		lives = 3;
 		hedgehog = new Hedgehog(11, 11, HUDHeight);
 		grid[11][11].setHedgehog(hedgehog);
-		grid[11][11].setIsHedgehog(true);
+		setLevel();
+	}
+	
+	public void changeLevel() {
+		// Initialize entities
+		grid = new Tile[23][23];
+		for (int i = 0; i < 23; i++) {
+			for (int j = 0; j < 23; j++) {
+				grid[i][j] = new Tile(i, j);
+				grid[i][j].setDebugActive(false);
+			}
+		}
+		
+		Date tempTime = new Date();
+		previousTime = tempTime.getTime();
+		second = TIMERCOUNT;
+		hedgehog = new Hedgehog(11, 11, HUDHeight);
+		grid[11][11].setHedgehog(hedgehog);
+		setLevel();
 	}
 	
 	public void getFPS() {
