@@ -65,6 +65,12 @@ class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		HedgehogHavoc hh = (HedgehogHavoc)game;
 		
+		if (hh.confirmLevel) {
+			hh.confirmLevel = false;
+			changeLevel(hh, game, hh.currentLevel);
+			return;
+		}
+		
 		if (hh.lives <= 0) {
 			hh.restartGame();
 			remainingBadgers = HedgehogHavoc.BADGERCOUNT;
@@ -100,20 +106,9 @@ class PlayingState extends BasicGameState {
 			pauseTimer = 10;
 			game.enterState(HedgehogHavoc.PAUSESTATE);
 			return;
-		} else if (input.isKeyDown(Input.KEY_1)) {
-			changeLevel(hh, game, 1);
-			return;
-		} else if (input.isKeyDown(Input.KEY_2)) {
-			changeLevel(hh, game, 2);
-			return;
-		} else if (input.isKeyDown(Input.KEY_3)) {
-			changeLevel(hh, game, 3);
-			return;
-		} else if (input.isKeyDown(Input.KEY_4)) {
-			changeLevel(hh, game, 4);
-			return;
-		} else if (input.isKeyDown(Input.KEY_5)) {
-			changeLevel(hh, game, 5);
+		}  else if (input.isKeyDown(Input.KEY_L) && pauseTimer <= 0) {
+			pauseTimer = 10;
+			game.enterState(HedgehogHavoc.LEVELSELECTSTATE);
 			return;
 		}
 		

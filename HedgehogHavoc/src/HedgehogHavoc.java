@@ -22,10 +22,12 @@ public class HedgehogHavoc extends StateBasedGame {
 	// State IDs for each state.
 	public static final int PLAYINGSTATE = 0;
 	public static final int PAUSESTATE = 1;
+	public static final int LEVELSELECTSTATE = 2;
 	
 	// Resources
 	public static final String BACKGROUND_IMG = "resource/background.png";
 	public static final String HUDBACKGROUND_IMG = "resource/hudbackground.png";
+	public static final String LEVELSELECTBACKGROUND_IMG = "resource/level_select.png";
 	public static final String PAUSEBACKGROUND_IMG = "resource/pause_background.png";
 	public static final String LOGO_IMG = "resource/hedgehoghavoc_logo.png";
 	public static final String HEDGEHOGRIGHT_IMG = "resource/hedgehog_right.png";
@@ -52,6 +54,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	int currentLevel;
 	int second;
 	long previousTime;
+	boolean confirmLevel;
 	
 	Tile[][] grid;
 	Hedgehog hedgehog;
@@ -82,11 +85,13 @@ public class HedgehogHavoc extends StateBasedGame {
 	public void initStatesList(GameContainer container) throws SlickException {
 		addState(new PlayingState());
 		addState(new PauseState());
+		addState(new LevelSelectState());
 		
 		// Pre-loading all image resources
 		ResourceManager.loadImage(BACKGROUND_IMG);
 		ResourceManager.loadImage(HUDBACKGROUND_IMG);
 		ResourceManager.loadImage(PAUSEBACKGROUND_IMG);
+		ResourceManager.loadImage(LEVELSELECTBACKGROUND_IMG);
 		ResourceManager.loadImage(LOGO_IMG);
 		ResourceManager.loadImage(HEDGEHOGLEFT_IMG);
 		ResourceManager.loadImage(HEDGEHOGRIGHT_IMG);
@@ -113,6 +118,7 @@ public class HedgehogHavoc extends StateBasedGame {
 		currentLevel = 1;
 		score = 0;
 		lives = 3;
+		confirmLevel = false;
 		hedgehog = new Hedgehog(11, 11, HUDHeight);
 		grid[11][11].setHedgehog(hedgehog);
 		grid[11][11].setIsHedgehog(true);
