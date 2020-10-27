@@ -190,7 +190,7 @@ class PlayingState extends BasicGameState {
 		} else if (input.isKeyDown(Input.KEY_D) && pauseTimer <= 0) {
 			pauseTimer = 10;
 			HedgehogHavoc.debug = !HedgehogHavoc.debug;
-		} else if (input.isKeyDown(Input.KEY_PERIOD) && pauseTimer <= 0) {
+		} else if (input.isKeyDown(Input.KEY_H) && pauseTimer <= 0) {
 			pauseTimer = 10;
 			HedgehogHavoc.godMode = !HedgehogHavoc.godMode;
 		} else if (input.isKeyDown(Input.KEY_EQUALS) && pauseTimer <= 0) {

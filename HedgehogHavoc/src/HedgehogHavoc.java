@@ -32,7 +32,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static final String BACKGROUND_IMG = "resource/background.png";
 	public static final String HUDBACKGROUND_IMG = "resource/hudbackground.png";
 	public static final String LEVELSELECTBACKGROUND_IMG = "resource/level_select.png";
-	public static final String PAUSEBACKGROUND_IMG = "resource/pause_background.png";
+	public static final String PAUSEBACKGROUND_IMG = "resource/paused.png";
 	public static final String GAMEOVERSCREEN_IMG = "resource/youwin.png";
 	public static final String LOGO_IMG = "resource/hedgehoghavoc_logo.png";
 	public static final String LEVEL1_IMG = "resource/level1.png";
