@@ -22,7 +22,6 @@ class PlayingState extends BasicGameState {
 	private int hedgehogY;
 	private int badgerCount;
 	private int caughtBadgers;
-	private int remainingBadgers;
 	private boolean hedgehogMoved;
 	private boolean hedgehogStuck;
 	private boolean transition;
@@ -39,7 +38,7 @@ class PlayingState extends BasicGameState {
 		if (hh.currentLevel == 2) badgerCount = 2;
 		
 		caughtBadgers = 0;
-		remainingBadgers = HedgehogHavoc.BADGERCOUNT;
+		hh.remainingBadgers = HedgehogHavoc.BADGERCOUNT;
 		pathFinder = new Pathfinding();
 		hedgehogMoved = false;
 		hedgehogStuck = false;
@@ -63,10 +62,6 @@ class PlayingState extends BasicGameState {
 		}
 		
 		hh.renderStats(g);
-		
-		if (HedgehogHavoc.godMode) {
-			g.drawString("God Mode", 0, 0);
-		}
 		
 		if (transition) {
 			g.drawImage(ResourceManager.getImage(HedgehogHavoc.LOGO_IMG),
@@ -141,7 +136,7 @@ class PlayingState extends BasicGameState {
 			}
 			
 			hh.restartGame();
-			remainingBadgers = HedgehogHavoc.BADGERCOUNT;
+			hh.remainingBadgers = HedgehogHavoc.BADGERCOUNT;
 			caughtBadgers = 0;
 			badgerCount = countBadgers(hh.grid);
 			hedgehogX = 11;
@@ -152,7 +147,7 @@ class PlayingState extends BasicGameState {
 			game.enterState(HedgehogHavoc.PLAYINGSTATE);
 		}
 		
-		if (remainingBadgers <= 0) {
+		if (hh.remainingBadgers <= 0) {
 			hh.currentLevel += 1;
 			hh.confirmLevel = true;
 			return;
@@ -190,7 +185,7 @@ class PlayingState extends BasicGameState {
 		} else if (input.isKeyDown(Input.KEY_D) && pauseTimer <= 0) {
 			pauseTimer = 10;
 			HedgehogHavoc.debug = !HedgehogHavoc.debug;
-		} else if (input.isKeyDown(Input.KEY_PERIOD) && pauseTimer <= 0) {
+		} else if (input.isKeyDown(Input.KEY_H) && pauseTimer <= 0) {
 			pauseTimer = 10;
 			HedgehogHavoc.godMode = !HedgehogHavoc.godMode;
 		} else if (input.isKeyDown(Input.KEY_EQUALS) && pauseTimer <= 0) {
@@ -239,7 +234,7 @@ class PlayingState extends BasicGameState {
 		if (hh.currentLevel <= 5) {
 			hh.currentLevel = level;
 			hh.changeLevel();
-			remainingBadgers = HedgehogHavoc.BADGERCOUNT;
+			hh.remainingBadgers = HedgehogHavoc.BADGERCOUNT;
 			badgerCount = countBadgers(hh.grid);
 			caughtBadgers = 0;
 			hedgehogX = 11;
@@ -251,7 +246,7 @@ class PlayingState extends BasicGameState {
 		} else {
 			hh.currentLevel = 1;
 			hh.changeLevel();
-			remainingBadgers = HedgehogHavoc.BADGERCOUNT;
+			hh.remainingBadgers = HedgehogHavoc.BADGERCOUNT;
 			badgerCount = countBadgers(hh.grid);
 			caughtBadgers = 0;
 			hedgehogX = 11;
@@ -335,7 +330,7 @@ class PlayingState extends BasicGameState {
 				hh.score += 110;
 				hh.grid[hedgehogX + 1][hedgehogY].setBadger(null);
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 			} else {
 				hh.lives -= 1;
 				respawnHedgehog(hh);
@@ -362,7 +357,7 @@ class PlayingState extends BasicGameState {
 				hh.score += 110;
 				hh.grid[hedgehogX - 1][hedgehogY].setBadger(null);
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 			} else {
 				hh.lives -= 1;
 				respawnHedgehog(hh);
@@ -389,7 +384,7 @@ class PlayingState extends BasicGameState {
 				hh.score += 110;
 				hh.grid[hedgehogX][hedgehogY - 1].setBadger(null);
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 			} else {
 				hh.lives -= 1;
 				respawnHedgehog(hh);
@@ -416,7 +411,7 @@ class PlayingState extends BasicGameState {
 				hh.score += 110;
 				hh.grid[hedgehogX][hedgehogY + 1].setBadger(null);
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 			} else {
 				hh.lives -= 1;
 				respawnHedgehog(hh);
@@ -429,8 +424,6 @@ class PlayingState extends BasicGameState {
 	}
 	
 	private void moveRight(HedgehogHavoc hh) {
-		hh.grid[hedgehogX][hedgehogY].getHedgehog().addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGRIGHT_IMG));
-		hh.grid[hedgehogX][hedgehogY].getHedgehog().removeImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = (int) hh.grid[hedgehogX][hedgehogY].getHedgehog().getCoarseGrainedWidth();
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveDir = "R";
 		hh.grid[hedgehogX + 1][hedgehogY].setHedgehog(hh.grid[hedgehogX][hedgehogY].getHedgehog().clone(hh.grid[hedgehogX][hedgehogY].getHedgehog()));
@@ -440,8 +433,6 @@ class PlayingState extends BasicGameState {
 	}
 	
 	private void moveLeft(HedgehogHavoc hh) {
-		hh.grid[hedgehogX][hedgehogY].getHedgehog().addImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
-		hh.grid[hedgehogX][hedgehogY].getHedgehog().removeImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGRIGHT_IMG));
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = (int) hh.grid[hedgehogX][hedgehogY].getHedgehog().getCoarseGrainedWidth();
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveDir = "L";
 		hh.grid[hedgehogX - 1][hedgehogY].setHedgehog(hh.grid[hedgehogX][hedgehogY].getHedgehog().clone(hh.grid[hedgehogX][hedgehogY].getHedgehog()));
@@ -592,7 +583,7 @@ class PlayingState extends BasicGameState {
 				hh.grid[x][y].setBadger(null);
 				hh.score += 110;
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 				return;
 			} else {
 				hh.lives -= 1;
@@ -614,7 +605,7 @@ class PlayingState extends BasicGameState {
 				hh.grid[x][y].setBadger(null);
 				hh.score += 110;
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 				return;
 			} else {
 				hh.lives -= 1;
@@ -634,7 +625,7 @@ class PlayingState extends BasicGameState {
 				hh.grid[x][y].setBadger(null);
 				hh.score += 110;
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 				return;
 			} else {
 				hh.lives -= 1;
@@ -654,7 +645,7 @@ class PlayingState extends BasicGameState {
 				hh.grid[x][y].setBadger(null);
 				hh.score += 110;
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 				return;
 			} else {
 				hh.lives -= 1;
@@ -671,25 +662,17 @@ class PlayingState extends BasicGameState {
 		boolean checkRight = x == 22 || (!hh.grid[x + 1][y].getIsGround() && !hh.grid[x + 1][y].getIsHedgehog());
 		boolean checkUp = y == 0 || (!hh.grid[x][y - 1].getIsGround() && !hh.grid[x][y - 1].getIsHedgehog());
 		boolean checkDown = y == 23 || (!hh.grid[x][y + 1].getIsGround() && !hh.grid[x][y + 1].getIsHedgehog());
-		boolean checkTopLeft = (x == 0 && y == 0) || (!hh.grid[x - 1][y - 1].getIsGround() && !hh.grid[x - 1][y - 1].getIsHedgehog());
-		boolean checkTopRight = (x == 22 && y == 0) || (!hh.grid[x + 1][y - 1].getIsGround() && !hh.grid[x + 1][y - 1].getIsHedgehog());
-		boolean checkBottomLeft = (x == 0 && y == 22) || (!hh.grid[x - 1][y + 1].getIsGround() && !hh.grid[x - 1][y + 1].getIsHedgehog());
-		boolean checkBottomRight = (x == 22 && y == 22) || (!hh.grid[x + 1][y + 1].getIsGround() && !hh.grid[x + 1][y + 1].getIsHedgehog());
 		boolean allCaught = badgerCount == caughtBadgers;
 		if (checkLeft &&
 				checkRight &&
 				checkUp &&
-				checkDown &&
-				checkTopLeft &&
-				checkTopRight &&
-				checkBottomLeft &&
-				checkBottomRight) {
+				checkDown) {
 			if (allCaught) {
 				hh.grid[x][y].setBadger(null);
 				hh.grid[x][y].setBug(new Bug(x, y, hh.HUDHeight));
 				badgerCount -= 1;
 				caughtBadgers -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 				hh.score += 10;
 			} else if (!hh.grid[x][y].getBadger().caught) {
 				hh.grid[x][y].getBadger().caught = true;

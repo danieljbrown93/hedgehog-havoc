@@ -9,6 +9,7 @@ import jig.ResourceManager;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -32,7 +33,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static final String BACKGROUND_IMG = "resource/background.png";
 	public static final String HUDBACKGROUND_IMG = "resource/hudbackground.png";
 	public static final String LEVELSELECTBACKGROUND_IMG = "resource/level_select.png";
-	public static final String PAUSEBACKGROUND_IMG = "resource/pause_background.png";
+	public static final String PAUSEBACKGROUND_IMG = "resource/paused.png";
 	public static final String GAMEOVERSCREEN_IMG = "resource/youwin.png";
 	public static final String LOGO_IMG = "resource/hedgehoghavoc_logo.png";
 	public static final String LEVEL1_IMG = "resource/level1.png";
@@ -43,6 +44,8 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static final String GAMEOVER_IMG = "resource/gameover.png";
 	public static final String HEDGEHOGRIGHT_IMG = "resource/hedgehog_right.png";
 	public static final String HEDGEHOGLEFT_IMG = "resource/hedgehog_left.png";
+	public static final String HEDGEHOGUP_IMG = "resource/hedgehog_up.png";
+	public static final String HEDGEHOGDOWN_IMG = "resource/hedgehog_down.png";
 	public static final String BADGERRIGHT_IMG = "resource/badger_right.png";
 	public static final String BADGERLEFT_IMG = "resource/badger_left.png";
 	public static final String BLOCK_MOVABLE_IMG = "resource/block_movable.png";
@@ -65,6 +68,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	int lives;
 	int currentLevel;
 	int second;
+	int remainingBadgers;
 	long previousTime;
 	boolean confirmLevel;
 	
@@ -117,6 +121,8 @@ public class HedgehogHavoc extends StateBasedGame {
 		ResourceManager.loadImage(GAMEOVER_IMG);
 		ResourceManager.loadImage(HEDGEHOGLEFT_IMG);
 		ResourceManager.loadImage(HEDGEHOGRIGHT_IMG);
+		ResourceManager.loadImage(HEDGEHOGUP_IMG);
+		ResourceManager.loadImage(HEDGEHOGDOWN_IMG);
 		ResourceManager.loadImage(BADGERLEFT_IMG);
 		ResourceManager.loadImage(BADGERRIGHT_IMG);
 		ResourceManager.loadImage(BLOCK_MOVABLE_IMG);
@@ -140,6 +146,7 @@ public class HedgehogHavoc extends StateBasedGame {
 		currentLevel = 1;
 		score = 0;
 		lives = 3;
+		remainingBadgers = BADGERCOUNT;
 		confirmLevel = false;
 		hedgehog = new Hedgehog(11, 11, HUDHeight);
 		grid[11][11].setHedgehog(hedgehog);
@@ -176,12 +183,43 @@ public class HedgehogHavoc extends StateBasedGame {
 			previousTime = tempTime.getTime();
 		}
 		
+		Font font = g.getFont();
 		g.drawImage(ResourceManager.getImage(HUDBACKGROUND_IMG), 0, 0);
-		g.setColor(Color.black);
-		g.drawString("FPS: " + fps, 10, 10);
-		g.drawString("Score: " + score, 100, 10);
-		g.drawString("Timer: " + String.format("%02d", second), 300, 10);
-		g.drawString("Lives: " + lives, 500, 10);
+		g.setColor(Color.white);
+		g.drawString("FPS: " + fps,
+				10,
+				ScreenHeight - font.getHeight("FPS:") - 10);
+		g.drawString(
+				"High Score: " + highScore,
+				ScreenWidth - font.getWidth("High Score: " + highScore) - 10,
+				5);
+		g.drawString(
+				"Score: " + score,
+				ScreenWidth - font.getWidth("Score: " + score) - 10,
+				10 + font.getHeight("Score"));
+		g.drawString(
+				"Timer: " + String.format("%02d", second),
+				(ScreenWidth / 2) - (font.getWidth("Timer: " + String.format("%02d", second)) / 2),
+				5);
+		g.drawString(
+				"Remaining Badgers: " + remainingBadgers,
+				(ScreenWidth / 2) - (font.getWidth("Remaining Badgers: " + remainingBadgers) / 2),
+				10 + font.getHeight("Haha"));
+		
+		if (godMode) {
+			g.drawString("God Mode", 10, 18);
+		} else if (lives <= 3) {
+			for (int i = 0; i < lives - 1; i++) {
+				g.drawImage(ResourceManager.getImage(HEDGEHOGDOWN_IMG),
+						ResourceManager.getImage(HEDGEHOGDOWN_IMG).getWidth() * i + 10 * (i + 1),
+						10);
+			}
+		} else {
+			g.drawImage(ResourceManager.getImage(HEDGEHOGDOWN_IMG),
+					10,
+					10);
+			g.drawString(" x " + lives, ResourceManager.getImage(HEDGEHOGDOWN_IMG).getWidth() + 10, 18);
+		}
 	}
 	
 	public void setLevel() {
