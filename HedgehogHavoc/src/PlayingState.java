@@ -177,6 +177,11 @@ class PlayingState extends BasicGameState {
 			pauseTimer = 10;
 			game.enterState(HedgehogHavoc.LEVELSELECTSTATE);
 			return;
+		}  else if ((input.isKeyDown(Input.KEY_G) && input.isKeyDown(Input.KEY_O)) && pauseTimer <= 0) {
+			pauseTimer = 10;
+			hh.currentLevel = 6;
+			hh.confirmLevel = true;
+			return;
 		}
 		
 		for (int i = 0; i < 23; i++) {
@@ -217,17 +222,31 @@ class PlayingState extends BasicGameState {
 	}
 	
 	private void changeLevel(HedgehogHavoc hh, StateBasedGame game, int level) {
-		hh.currentLevel = level;
-		remainingBadgers = HedgehogHavoc.BADGERCOUNT;
-		badgerCount = countBadgers(hh.grid);
-		caughtBadgers = 0;
-		hh.changeLevel();
-		hedgehogX = 11;
-		hedgehogY = 11;
-		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = 10;
-		transition = true;
-		transitionCounter = HedgehogHavoc.TRANSITIONCOUNT;
-		game.enterState(HedgehogHavoc.PLAYINGSTATE);
+		if (hh.currentLevel <= 5) {
+			hh.currentLevel = level;
+			hh.changeLevel();
+			remainingBadgers = HedgehogHavoc.BADGERCOUNT;
+			badgerCount = countBadgers(hh.grid);
+			caughtBadgers = 0;
+			hedgehogX = 11;
+			hedgehogY = 11;
+			hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = 10;
+			transition = true;
+			transitionCounter = HedgehogHavoc.TRANSITIONCOUNT;
+			game.enterState(HedgehogHavoc.PLAYINGSTATE);
+		} else {
+			hh.currentLevel = 1;
+			hh.changeLevel();
+			remainingBadgers = HedgehogHavoc.BADGERCOUNT;
+			badgerCount = countBadgers(hh.grid);
+			caughtBadgers = 0;
+			hedgehogX = 11;
+			hedgehogY = 11;
+			hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = 10;
+			transition = true;
+			transitionCounter = HedgehogHavoc.TRANSITIONCOUNT;
+			game.enterState(HedgehogHavoc.GAMEOVERSTATE);
+		}
 	}
 	
 	private int countBadgers(Tile[][] grid) {

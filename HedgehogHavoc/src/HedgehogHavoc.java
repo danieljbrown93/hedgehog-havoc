@@ -1,5 +1,8 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Scanner;
 
 import jig.Entity;
 import jig.ResourceManager;
@@ -30,6 +33,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static final String HUDBACKGROUND_IMG = "resource/hudbackground.png";
 	public static final String LEVELSELECTBACKGROUND_IMG = "resource/level_select.png";
 	public static final String PAUSEBACKGROUND_IMG = "resource/pause_background.png";
+	public static final String GAMEOVERSCREEN_IMG = "resource/youwin.png";
 	public static final String LOGO_IMG = "resource/hedgehoghavoc_logo.png";
 	public static final String LEVEL1_IMG = "resource/level1.png";
 	public static final String LEVEL2_IMG = "resource/level2.png";
@@ -58,6 +62,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	
 	int fps;
 	int score;
+	int highScore;
 	int lives;
 	int currentLevel;
 	int second;
@@ -100,6 +105,7 @@ public class HedgehogHavoc extends StateBasedGame {
 		ResourceManager.loadImage(BACKGROUND_IMG);
 		ResourceManager.loadImage(HUDBACKGROUND_IMG);
 		ResourceManager.loadImage(PAUSEBACKGROUND_IMG);
+		ResourceManager.loadImage(GAMEOVERSCREEN_IMG);
 		ResourceManager.loadImage(LEVELSELECTBACKGROUND_IMG);
 		ResourceManager.loadImage(LOGO_IMG);
 		ResourceManager.loadImage(LEVEL1_IMG);
@@ -137,6 +143,28 @@ public class HedgehogHavoc extends StateBasedGame {
 		hedgehog = new Hedgehog(11, 11, HUDHeight);
 		grid[11][11].setHedgehog(hedgehog);
 		grid[11][11].setIsHedgehog(true);
+		
+		// Load score from score file (if it exists).
+		File scoreFile = new File("score.txt");
+		Scanner fileReader;
+		String fileScore = "";
+		try {
+			fileReader = new Scanner(scoreFile);
+			while (fileReader.hasNextLine()) {
+				fileScore += fileReader.nextLine();
+			}
+			
+			fileReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		if (!fileScore.trim().isEmpty()) {
+			highScore = Integer.parseInt(fileScore);
+		} else {
+			highScore = 0;
+		}
 	}
 	
 	public void renderStats(Graphics g) {
@@ -394,6 +422,9 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static void main(String[] args) throws IOException {
 		try
 		{
+			File scoreFile = new File("score.txt");
+			scoreFile.createNewFile();
+			
 			// 23x23 grid with 26x26 pixel images = 598x598 resolution
 			app = new AppGameContainer(new HedgehogHavoc("Hedgehog Havoc", 598, 648, 50));
 			app.setDisplayMode(598, 648, false);

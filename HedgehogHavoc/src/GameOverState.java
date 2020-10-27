@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
@@ -25,27 +29,45 @@ class GameOverState extends BasicGameState {
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		pauseTimer = 10;
+		HedgehogHavoc hh = (HedgehogHavoc)game;
+		pauseTimer = 50;
+		
+		if (hh.score > hh.highScore) {
+			hh.highScore = hh.score;
+			File oldScore = new File("score.txt");
+			oldScore.delete();
+			File newScore = new File("score.txt");
+			try {
+				FileWriter fileWriter = new FileWriter(newScore, false);
+				fileWriter.write(Integer.toString(hh.highScore));
+				fileWriter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		HedgehogHavoc hh = (HedgehogHavoc)game;
 		g.setColor(Color.white);
-		g.drawImage(ResourceManager.getImage(HedgehogHavoc.PAUSEBACKGROUND_IMG), 0, 0);
-		g.drawImage(ResourceManager.getImage(HedgehogHavoc.LOGO_IMG), 0, 0);
+		g.drawImage(ResourceManager.getImage(HedgehogHavoc.GAMEOVERSCREEN_IMG), 0, 0);
+		g.drawImage(
+				ResourceManager.getImage(HedgehogHavoc.LOGO_IMG),
+				(hh.ScreenWidth / 2) - (ResourceManager.getImage(HedgehogHavoc.LOGO_IMG).getWidth() / 2),
+				ResourceManager.getImage(HedgehogHavoc.LOGO_IMG).getHeight());
 		
 		int logoGap = ResourceManager.getImage(HedgehogHavoc.LOGO_IMG).getHeight();
 		Font font = g.getFont();
 		int fontHeight = font.getHeight("test");
 		g.drawString(
-				"Paused",
-				(hh.ScreenWidth / 2) - (font.getWidth("Paused") / 2),
-				logoGap + fontHeight);
+				"Your Score: " + hh.score,
+				(hh.ScreenWidth / 2) - (font.getWidth("Your Score: " + hh.score) / 2),
+				(hh.ScreenHeight / 2) - fontHeight);
 		g.drawString(
-				"Escape: Return to game",
-				(hh.ScreenWidth / 2) - (font.getWidth("Escape: Return to game") / 2),
-				logoGap + fontHeight * 2);
+				"High Score: " + hh.highScore,
+				(hh.ScreenWidth / 2) - (font.getWidth("High Score: " + hh.highScore) / 2),
+				(hh.ScreenHeight / 2) + fontHeight);
 	}
 
 	@Override
@@ -55,7 +77,8 @@ class GameOverState extends BasicGameState {
 				
 		hh.getFPS();
 		
-		if (input.isKeyDown(Input.KEY_ESCAPE) && pauseTimer <= 0) {
+		if (input.isKeyDown(Input.KEY_ENTER) && pauseTimer <= 0) {
+			hh.score = 0;
 			game.enterState(HedgehogHavoc.PLAYINGSTATE);
 		}
 		
