@@ -44,6 +44,8 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static final String GAMEOVER_IMG = "resource/gameover.png";
 	public static final String HEDGEHOGRIGHT_IMG = "resource/hedgehog_right.png";
 	public static final String HEDGEHOGLEFT_IMG = "resource/hedgehog_left.png";
+	public static final String HEDGEHOGUP_IMG = "resource/hedgehog_up.png";
+	public static final String HEDGEHOGDOWN_IMG = "resource/hedgehog_down.png";
 	public static final String BADGERRIGHT_IMG = "resource/badger_right.png";
 	public static final String BADGERLEFT_IMG = "resource/badger_left.png";
 	public static final String BLOCK_MOVABLE_IMG = "resource/block_movable.png";
@@ -119,6 +121,8 @@ public class HedgehogHavoc extends StateBasedGame {
 		ResourceManager.loadImage(GAMEOVER_IMG);
 		ResourceManager.loadImage(HEDGEHOGLEFT_IMG);
 		ResourceManager.loadImage(HEDGEHOGRIGHT_IMG);
+		ResourceManager.loadImage(HEDGEHOGUP_IMG);
+		ResourceManager.loadImage(HEDGEHOGDOWN_IMG);
 		ResourceManager.loadImage(BADGERLEFT_IMG);
 		ResourceManager.loadImage(BADGERRIGHT_IMG);
 		ResourceManager.loadImage(BLOCK_MOVABLE_IMG);
@@ -206,15 +210,15 @@ public class HedgehogHavoc extends StateBasedGame {
 			g.drawString("God Mode", 10, 18);
 		} else if (lives <= 3) {
 			for (int i = 0; i < lives - 1; i++) {
-				g.drawImage(ResourceManager.getImage(HEDGEHOGRIGHT_IMG),
-						ResourceManager.getImage(HEDGEHOGRIGHT_IMG).getWidth() * i + 10 * (i + 1),
+				g.drawImage(ResourceManager.getImage(HEDGEHOGDOWN_IMG),
+						ResourceManager.getImage(HEDGEHOGDOWN_IMG).getWidth() * i + 10 * (i + 1),
 						10);
 			}
 		} else {
-			g.drawImage(ResourceManager.getImage(HEDGEHOGRIGHT_IMG),
+			g.drawImage(ResourceManager.getImage(HEDGEHOGDOWN_IMG),
 					10,
 					10);
-			g.drawString(" x " + lives, ResourceManager.getImage(HEDGEHOGRIGHT_IMG).getWidth() + 10, 18);
+			g.drawString(" x " + lives, ResourceManager.getImage(HEDGEHOGDOWN_IMG).getWidth() + 10, 18);
 		}
 	}
 	

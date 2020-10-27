@@ -14,9 +14,9 @@ class Hedgehog extends Entity {
 	 */
 	public Hedgehog(final int x, final int y, final int HUDOffset) {
 		super(
-				(x * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG).getWidth() / 2),
-				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG).getHeight() / 2) + HUDOffset);
-		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
+				(x * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOGDOWN_IMG).getWidth() / 2),
+				(y * 26f) + (ResourceManager.getImage(HedgehogHavoc.HEDGEHOGDOWN_IMG).getHeight() / 2) + HUDOffset);
+		addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGDOWN_IMG));
 		velocity = new Vector(0, 0);
 		moveDir = "";
 		antiAliasing = false;

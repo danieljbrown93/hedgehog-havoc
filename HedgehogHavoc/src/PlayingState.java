@@ -424,8 +424,6 @@ class PlayingState extends BasicGameState {
 	}
 	
 	private void moveRight(HedgehogHavoc hh) {
-		hh.grid[hedgehogX][hedgehogY].getHedgehog().addImageWithBoundingBox(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGRIGHT_IMG));
-		hh.grid[hedgehogX][hedgehogY].getHedgehog().removeImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = (int) hh.grid[hedgehogX][hedgehogY].getHedgehog().getCoarseGrainedWidth();
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveDir = "R";
 		hh.grid[hedgehogX + 1][hedgehogY].setHedgehog(hh.grid[hedgehogX][hedgehogY].getHedgehog().clone(hh.grid[hedgehogX][hedgehogY].getHedgehog()));
@@ -435,8 +433,6 @@ class PlayingState extends BasicGameState {
 	}
 	
 	private void moveLeft(HedgehogHavoc hh) {
-		hh.grid[hedgehogX][hedgehogY].getHedgehog().addImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGLEFT_IMG));
-		hh.grid[hedgehogX][hedgehogY].getHedgehog().removeImage(ResourceManager.getImage(HedgehogHavoc.HEDGEHOGRIGHT_IMG));
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = (int) hh.grid[hedgehogX][hedgehogY].getHedgehog().getCoarseGrainedWidth();
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveDir = "L";
 		hh.grid[hedgehogX - 1][hedgehogY].setHedgehog(hh.grid[hedgehogX][hedgehogY].getHedgehog().clone(hh.grid[hedgehogX][hedgehogY].getHedgehog()));
@@ -666,19 +662,11 @@ class PlayingState extends BasicGameState {
 		boolean checkRight = x == 22 || (!hh.grid[x + 1][y].getIsGround() && !hh.grid[x + 1][y].getIsHedgehog());
 		boolean checkUp = y == 0 || (!hh.grid[x][y - 1].getIsGround() && !hh.grid[x][y - 1].getIsHedgehog());
 		boolean checkDown = y == 23 || (!hh.grid[x][y + 1].getIsGround() && !hh.grid[x][y + 1].getIsHedgehog());
-		boolean checkTopLeft = (x == 0 && y == 0) || (!hh.grid[x - 1][y - 1].getIsGround() && !hh.grid[x - 1][y - 1].getIsHedgehog());
-		boolean checkTopRight = (x == 22 && y == 0) || (!hh.grid[x + 1][y - 1].getIsGround() && !hh.grid[x + 1][y - 1].getIsHedgehog());
-		boolean checkBottomLeft = (x == 0 && y == 22) || (!hh.grid[x - 1][y + 1].getIsGround() && !hh.grid[x - 1][y + 1].getIsHedgehog());
-		boolean checkBottomRight = (x == 22 && y == 22) || (!hh.grid[x + 1][y + 1].getIsGround() && !hh.grid[x + 1][y + 1].getIsHedgehog());
 		boolean allCaught = badgerCount == caughtBadgers;
 		if (checkLeft &&
 				checkRight &&
 				checkUp &&
-				checkDown &&
-				checkTopLeft &&
-				checkTopRight &&
-				checkBottomLeft &&
-				checkBottomRight) {
+				checkDown) {
 			if (allCaught) {
 				hh.grid[x][y].setBadger(null);
 				hh.grid[x][y].setBug(new Bug(x, y, hh.HUDHeight));
