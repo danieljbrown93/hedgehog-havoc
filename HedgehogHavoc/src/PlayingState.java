@@ -193,6 +193,9 @@ class PlayingState extends BasicGameState {
 		} else if (input.isKeyDown(Input.KEY_PERIOD) && pauseTimer <= 0) {
 			pauseTimer = 10;
 			HedgehogHavoc.godMode = !HedgehogHavoc.godMode;
+		} else if (input.isKeyDown(Input.KEY_EQUALS) && pauseTimer <= 0) {
+			pauseTimer = 10;
+			hh.lives = 100;
 		}
 		
 		for (int i = 0; i < 23; i++) {
