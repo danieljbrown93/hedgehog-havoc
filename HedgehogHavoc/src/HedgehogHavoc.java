@@ -50,6 +50,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static final int BADGERCOUNT = 6;
 	public static final int MAXBADGERS = 6;
 	public static final int TIMERCOUNT = 60;
+	public static final int TRANSITIONCOUNT = 150;
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;

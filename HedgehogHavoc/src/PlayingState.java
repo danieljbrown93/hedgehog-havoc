@@ -44,7 +44,7 @@ class PlayingState extends BasicGameState {
 		hedgehogMoved = false;
 		hedgehogStuck = false;
 		transition = true;
-		transitionCounter = 100;
+		transitionCounter = HedgehogHavoc.TRANSITIONCOUNT;
 	}
 
 	@Override
@@ -65,6 +65,10 @@ class PlayingState extends BasicGameState {
 		hh.renderStats(g);
 		
 		if (transition) {
+			g.drawImage(ResourceManager.getImage(HedgehogHavoc.LOGO_IMG),
+					(hh.ScreenWidth / 2) - (ResourceManager.getImage(HedgehogHavoc.LOGO_IMG).getWidth() / 2),
+					hh.HUDHeight + ResourceManager.getImage(HedgehogHavoc.LOGO_IMG).getHeight());
+			
 			if (hh.lives <= 0) {
 				g.drawImage(ResourceManager.getImage(HedgehogHavoc.GAMEOVER_IMG),
 						(hh.ScreenWidth / 2) - (ResourceManager.getImage(HedgehogHavoc.GAMEOVER_IMG).getWidth() / 2),
@@ -105,10 +109,11 @@ class PlayingState extends BasicGameState {
 		}
 		
 		if (transition) {
-			if (input.isKeyDown(Input.KEY_RIGHT) ||
+			if ((input.isKeyDown(Input.KEY_RIGHT) ||
 					input.isKeyDown(Input.KEY_LEFT) ||
 					input.isKeyDown(Input.KEY_UP) ||
-					input.isKeyDown(Input.KEY_DOWN)) {
+					input.isKeyDown(Input.KEY_DOWN)) &&
+					transitionCounter < HedgehogHavoc.TRANSITIONCOUNT - 10) {
 				transitionCounter = 0;
 				transition = false;
 			}
@@ -125,7 +130,7 @@ class PlayingState extends BasicGameState {
 		if (hh.lives <= 0) {
 			if (!dead) {
 				transition = true;
-				transitionCounter = 100;
+				transitionCounter = HedgehogHavoc.TRANSITIONCOUNT;
 				dead = true;
 				hh.grid[hedgehogX][hedgehogY].setHedgehog(null);
 				return;
@@ -138,7 +143,7 @@ class PlayingState extends BasicGameState {
 			hedgehogX = 11;
 			hedgehogY = 11;
 			transition = true;
-			transitionCounter = 100;
+			transitionCounter = HedgehogHavoc.TRANSITIONCOUNT;
 			dead = false;
 			game.enterState(HedgehogHavoc.PLAYINGSTATE);
 		}
@@ -221,7 +226,7 @@ class PlayingState extends BasicGameState {
 		hedgehogY = 11;
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = 10;
 		transition = true;
-		transitionCounter = 100;
+		transitionCounter = HedgehogHavoc.TRANSITIONCOUNT;
 		game.enterState(HedgehogHavoc.PLAYINGSTATE);
 	}
 	
