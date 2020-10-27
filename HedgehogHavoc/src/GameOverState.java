@@ -57,7 +57,6 @@ class GameOverState extends BasicGameState {
 				(hh.ScreenWidth / 2) - (ResourceManager.getImage(HedgehogHavoc.LOGO_IMG).getWidth() / 2),
 				ResourceManager.getImage(HedgehogHavoc.LOGO_IMG).getHeight());
 		
-		int logoGap = ResourceManager.getImage(HedgehogHavoc.LOGO_IMG).getHeight();
 		Font font = g.getFont();
 		int fontHeight = font.getHeight("test");
 		g.drawString(

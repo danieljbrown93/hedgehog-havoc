@@ -50,7 +50,6 @@ public class HedgehogHavoc extends StateBasedGame {
 	public static final String BUG_IMG = "resource/bug.png";
 	public static final String HOLE_IMG = "resource/hole.png";
 	public static final String PATH_DEBUG_IMG = "resource/path_debug.png";
-	public static final boolean debug = false;
 	public static final int BADGERCOUNT = 6;
 	public static final int MAXBADGERS = 6;
 	public static final int TIMERCOUNT = 60;
@@ -72,6 +71,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	Tile[][] grid;
 	Hedgehog hedgehog;
 	
+	public static boolean debug = false;
 	private static AppGameContainer app;
 
 	/**

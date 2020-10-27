@@ -173,15 +173,18 @@ class PlayingState extends BasicGameState {
 			pauseTimer = 10;
 			game.enterState(HedgehogHavoc.PAUSESTATE);
 			return;
-		}  else if (input.isKeyDown(Input.KEY_L) && pauseTimer <= 0) {
+		} else if (input.isKeyDown(Input.KEY_L) && pauseTimer <= 0) {
 			pauseTimer = 10;
 			game.enterState(HedgehogHavoc.LEVELSELECTSTATE);
 			return;
-		}  else if ((input.isKeyDown(Input.KEY_G) && input.isKeyDown(Input.KEY_O)) && pauseTimer <= 0) {
+		} else if ((input.isKeyDown(Input.KEY_G) && input.isKeyDown(Input.KEY_O)) && pauseTimer <= 0) {
 			pauseTimer = 10;
 			hh.currentLevel = 6;
 			hh.confirmLevel = true;
 			return;
+		} else if (input.isKeyDown(Input.KEY_D) && pauseTimer <= 0) {
+			pauseTimer = 10;
+			HedgehogHavoc.debug = !HedgehogHavoc.debug;
 		}
 		
 		for (int i = 0; i < 23; i++) {

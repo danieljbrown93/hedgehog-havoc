@@ -15,8 +15,8 @@
 - **[13]** Add hole entity, finish levels 4 and 5
 - **[14]** Add level select menu
 - **[15]** Add game over screen when all lives are gone or all levels are cleared
+- **[16]** Add God Mode and ability to toggle debug pathing
 
 # Open Issues
 
-- **[16]** Add God Mode and ability to toggle debug pathing
 - **[17]** Polishing!
