@@ -17,3 +17,6 @@
 - **[15]** Add game over screen when all lives are gone or all levels are cleared
 
 # Open Issues
+
+- **[16]** Add God Mode and ability to toggle debug pathing
+- **[17]** Polishing!
