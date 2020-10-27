@@ -17,6 +17,7 @@ import jig.ResourceManager;
 class PlayingState extends BasicGameState {
 	private Pathfinding pathFinder;
 	private int pauseTimer;
+	private int transitionCounter;
 	private int hedgehogX;
 	private int hedgehogY;
 	private int badgerCount;
@@ -24,6 +25,8 @@ class PlayingState extends BasicGameState {
 	private int remainingBadgers;
 	private boolean hedgehogMoved;
 	private boolean hedgehogStuck;
+	private boolean transition;
+	private boolean dead;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
@@ -40,6 +43,8 @@ class PlayingState extends BasicGameState {
 		pathFinder = new Pathfinding();
 		hedgehogMoved = false;
 		hedgehogStuck = false;
+		transition = true;
+		transitionCounter = 100;
 	}
 
 	@Override
@@ -58,6 +63,34 @@ class PlayingState extends BasicGameState {
 		}
 		
 		hh.renderStats(g);
+		
+		if (transition) {
+			if (hh.lives <= 0) {
+				g.drawImage(ResourceManager.getImage(HedgehogHavoc.GAMEOVER_IMG),
+						(hh.ScreenWidth / 2) - (ResourceManager.getImage(HedgehogHavoc.GAMEOVER_IMG).getWidth() / 2),
+						(hh.ScreenHeight / 2) - (ResourceManager.getImage(HedgehogHavoc.GAMEOVER_IMG).getHeight() / 2));
+			} else if (hh.currentLevel == 1) {
+				g.drawImage(ResourceManager.getImage(HedgehogHavoc.LEVEL1_IMG),
+						(hh.ScreenWidth / 2) - (ResourceManager.getImage(HedgehogHavoc.LEVEL1_IMG).getWidth() / 2),
+						(hh.ScreenHeight / 2) - (ResourceManager.getImage(HedgehogHavoc.LEVEL1_IMG).getHeight() / 2));
+			} else if (hh.currentLevel == 2) {
+				g.drawImage(ResourceManager.getImage(HedgehogHavoc.LEVEL2_IMG),
+						(hh.ScreenWidth / 2) - (ResourceManager.getImage(HedgehogHavoc.LEVEL2_IMG).getWidth() / 2),
+						(hh.ScreenHeight / 2) - (ResourceManager.getImage(HedgehogHavoc.LEVEL2_IMG).getHeight() / 2));
+			} else if (hh.currentLevel == 3) {
+				g.drawImage(ResourceManager.getImage(HedgehogHavoc.LEVEL3_IMG),
+						(hh.ScreenWidth / 2) - (ResourceManager.getImage(HedgehogHavoc.LEVEL3_IMG).getWidth() / 2),
+						(hh.ScreenHeight / 2) - (ResourceManager.getImage(HedgehogHavoc.LEVEL3_IMG).getHeight() / 2));
+			} else if (hh.currentLevel == 4) {
+				g.drawImage(ResourceManager.getImage(HedgehogHavoc.LEVEL4_IMG),
+						(hh.ScreenWidth / 2) - (ResourceManager.getImage(HedgehogHavoc.LEVEL4_IMG).getWidth() / 2),
+						(hh.ScreenHeight / 2) - (ResourceManager.getImage(HedgehogHavoc.LEVEL4_IMG).getHeight() / 2));
+			} else if (hh.currentLevel == 5) {
+				g.drawImage(ResourceManager.getImage(HedgehogHavoc.LEVEL5_IMG),
+						(hh.ScreenWidth / 2) - (ResourceManager.getImage(HedgehogHavoc.LEVEL5_IMG).getWidth() / 2),
+						(hh.ScreenHeight / 2) - (ResourceManager.getImage(HedgehogHavoc.LEVEL5_IMG).getHeight() / 2));
+			}
+		}
 	}
 
 	@Override
@@ -71,13 +104,42 @@ class PlayingState extends BasicGameState {
 			return;
 		}
 		
+		if (transition) {
+			if (input.isKeyDown(Input.KEY_RIGHT) ||
+					input.isKeyDown(Input.KEY_LEFT) ||
+					input.isKeyDown(Input.KEY_UP) ||
+					input.isKeyDown(Input.KEY_DOWN)) {
+				transitionCounter = 0;
+				transition = false;
+			}
+			
+			if (transitionCounter > 0) {
+				transitionCounter -= 1;
+				return;
+			} else {
+				transitionCounter = 0;
+				transition = false;
+			}
+		}
+		
 		if (hh.lives <= 0) {
+			if (!dead) {
+				transition = true;
+				transitionCounter = 100;
+				dead = true;
+				hh.grid[hedgehogX][hedgehogY].setHedgehog(null);
+				return;
+			}
+			
 			hh.restartGame();
 			remainingBadgers = HedgehogHavoc.BADGERCOUNT;
 			caughtBadgers = 0;
 			badgerCount = countBadgers(hh.grid);
 			hedgehogX = 11;
 			hedgehogY = 11;
+			transition = true;
+			transitionCounter = 100;
+			dead = false;
 			game.enterState(HedgehogHavoc.PLAYINGSTATE);
 		}
 		
@@ -158,6 +220,8 @@ class PlayingState extends BasicGameState {
 		hedgehogX = 11;
 		hedgehogY = 11;
 		hh.grid[hedgehogX][hedgehogY].getHedgehog().moveCount = 10;
+		transition = true;
+		transitionCounter = 100;
 		game.enterState(HedgehogHavoc.PLAYINGSTATE);
 	}
 	
