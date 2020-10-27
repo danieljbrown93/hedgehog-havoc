@@ -72,6 +72,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	Hedgehog hedgehog;
 	
 	public static boolean debug = false;
+	public static boolean godMode = false;
 	private static AppGameContainer app;
 
 	/**
