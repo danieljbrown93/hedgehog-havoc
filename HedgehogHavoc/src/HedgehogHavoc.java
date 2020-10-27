@@ -9,6 +9,7 @@ import jig.ResourceManager;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -65,6 +66,7 @@ public class HedgehogHavoc extends StateBasedGame {
 	int lives;
 	int currentLevel;
 	int second;
+	int remainingBadgers;
 	long previousTime;
 	boolean confirmLevel;
 	
@@ -140,6 +142,7 @@ public class HedgehogHavoc extends StateBasedGame {
 		currentLevel = 1;
 		score = 0;
 		lives = 3;
+		remainingBadgers = BADGERCOUNT;
 		confirmLevel = false;
 		hedgehog = new Hedgehog(11, 11, HUDHeight);
 		grid[11][11].setHedgehog(hedgehog);
@@ -176,12 +179,43 @@ public class HedgehogHavoc extends StateBasedGame {
 			previousTime = tempTime.getTime();
 		}
 		
+		Font font = g.getFont();
 		g.drawImage(ResourceManager.getImage(HUDBACKGROUND_IMG), 0, 0);
-		g.setColor(Color.black);
-		g.drawString("FPS: " + fps, 10, 10);
-		g.drawString("Score: " + score, 100, 10);
-		g.drawString("Timer: " + String.format("%02d", second), 300, 10);
-		g.drawString("Lives: " + lives, 500, 10);
+		g.setColor(Color.white);
+		g.drawString("FPS: " + fps,
+				10,
+				ScreenHeight - font.getHeight("FPS:") - 10);
+		g.drawString(
+				"High Score: " + highScore,
+				ScreenWidth - font.getWidth("High Score: " + highScore) - 10,
+				5);
+		g.drawString(
+				"Score: " + score,
+				ScreenWidth - font.getWidth("Score: " + score) - 10,
+				10 + font.getHeight("Score"));
+		g.drawString(
+				"Timer: " + String.format("%02d", second),
+				(ScreenWidth / 2) - (font.getWidth("Timer: " + String.format("%02d", second)) / 2),
+				5);
+		g.drawString(
+				"Remaining Badgers: " + remainingBadgers,
+				(ScreenWidth / 2) - (font.getWidth("Remaining Badgers: " + remainingBadgers) / 2),
+				10 + font.getHeight("Haha"));
+		
+		if (godMode) {
+			g.drawString("God Mode", 10, 18);
+		} else if (lives <= 3) {
+			for (int i = 0; i < lives - 1; i++) {
+				g.drawImage(ResourceManager.getImage(HEDGEHOGRIGHT_IMG),
+						ResourceManager.getImage(HEDGEHOGRIGHT_IMG).getWidth() * i + 10 * (i + 1),
+						10);
+			}
+		} else {
+			g.drawImage(ResourceManager.getImage(HEDGEHOGRIGHT_IMG),
+					10,
+					10);
+			g.drawString(" x " + lives, ResourceManager.getImage(HEDGEHOGRIGHT_IMG).getWidth() + 10, 18);
+		}
 	}
 	
 	public void setLevel() {

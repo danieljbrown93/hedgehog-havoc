@@ -22,7 +22,6 @@ class PlayingState extends BasicGameState {
 	private int hedgehogY;
 	private int badgerCount;
 	private int caughtBadgers;
-	private int remainingBadgers;
 	private boolean hedgehogMoved;
 	private boolean hedgehogStuck;
 	private boolean transition;
@@ -39,7 +38,7 @@ class PlayingState extends BasicGameState {
 		if (hh.currentLevel == 2) badgerCount = 2;
 		
 		caughtBadgers = 0;
-		remainingBadgers = HedgehogHavoc.BADGERCOUNT;
+		hh.remainingBadgers = HedgehogHavoc.BADGERCOUNT;
 		pathFinder = new Pathfinding();
 		hedgehogMoved = false;
 		hedgehogStuck = false;
@@ -63,10 +62,6 @@ class PlayingState extends BasicGameState {
 		}
 		
 		hh.renderStats(g);
-		
-		if (HedgehogHavoc.godMode) {
-			g.drawString("God Mode", 0, 0);
-		}
 		
 		if (transition) {
 			g.drawImage(ResourceManager.getImage(HedgehogHavoc.LOGO_IMG),
@@ -141,7 +136,7 @@ class PlayingState extends BasicGameState {
 			}
 			
 			hh.restartGame();
-			remainingBadgers = HedgehogHavoc.BADGERCOUNT;
+			hh.remainingBadgers = HedgehogHavoc.BADGERCOUNT;
 			caughtBadgers = 0;
 			badgerCount = countBadgers(hh.grid);
 			hedgehogX = 11;
@@ -152,7 +147,7 @@ class PlayingState extends BasicGameState {
 			game.enterState(HedgehogHavoc.PLAYINGSTATE);
 		}
 		
-		if (remainingBadgers <= 0) {
+		if (hh.remainingBadgers <= 0) {
 			hh.currentLevel += 1;
 			hh.confirmLevel = true;
 			return;
@@ -239,7 +234,7 @@ class PlayingState extends BasicGameState {
 		if (hh.currentLevel <= 5) {
 			hh.currentLevel = level;
 			hh.changeLevel();
-			remainingBadgers = HedgehogHavoc.BADGERCOUNT;
+			hh.remainingBadgers = HedgehogHavoc.BADGERCOUNT;
 			badgerCount = countBadgers(hh.grid);
 			caughtBadgers = 0;
 			hedgehogX = 11;
@@ -251,7 +246,7 @@ class PlayingState extends BasicGameState {
 		} else {
 			hh.currentLevel = 1;
 			hh.changeLevel();
-			remainingBadgers = HedgehogHavoc.BADGERCOUNT;
+			hh.remainingBadgers = HedgehogHavoc.BADGERCOUNT;
 			badgerCount = countBadgers(hh.grid);
 			caughtBadgers = 0;
 			hedgehogX = 11;
@@ -335,7 +330,7 @@ class PlayingState extends BasicGameState {
 				hh.score += 110;
 				hh.grid[hedgehogX + 1][hedgehogY].setBadger(null);
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 			} else {
 				hh.lives -= 1;
 				respawnHedgehog(hh);
@@ -362,7 +357,7 @@ class PlayingState extends BasicGameState {
 				hh.score += 110;
 				hh.grid[hedgehogX - 1][hedgehogY].setBadger(null);
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 			} else {
 				hh.lives -= 1;
 				respawnHedgehog(hh);
@@ -389,7 +384,7 @@ class PlayingState extends BasicGameState {
 				hh.score += 110;
 				hh.grid[hedgehogX][hedgehogY - 1].setBadger(null);
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 			} else {
 				hh.lives -= 1;
 				respawnHedgehog(hh);
@@ -416,7 +411,7 @@ class PlayingState extends BasicGameState {
 				hh.score += 110;
 				hh.grid[hedgehogX][hedgehogY + 1].setBadger(null);
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 			} else {
 				hh.lives -= 1;
 				respawnHedgehog(hh);
@@ -592,7 +587,7 @@ class PlayingState extends BasicGameState {
 				hh.grid[x][y].setBadger(null);
 				hh.score += 110;
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 				return;
 			} else {
 				hh.lives -= 1;
@@ -614,7 +609,7 @@ class PlayingState extends BasicGameState {
 				hh.grid[x][y].setBadger(null);
 				hh.score += 110;
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 				return;
 			} else {
 				hh.lives -= 1;
@@ -634,7 +629,7 @@ class PlayingState extends BasicGameState {
 				hh.grid[x][y].setBadger(null);
 				hh.score += 110;
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 				return;
 			} else {
 				hh.lives -= 1;
@@ -654,7 +649,7 @@ class PlayingState extends BasicGameState {
 				hh.grid[x][y].setBadger(null);
 				hh.score += 110;
 				badgerCount -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 				return;
 			} else {
 				hh.lives -= 1;
@@ -689,7 +684,7 @@ class PlayingState extends BasicGameState {
 				hh.grid[x][y].setBug(new Bug(x, y, hh.HUDHeight));
 				badgerCount -= 1;
 				caughtBadgers -= 1;
-				remainingBadgers -= 1;
+				hh.remainingBadgers -= 1;
 				hh.score += 10;
 			} else if (!hh.grid[x][y].getBadger().caught) {
 				hh.grid[x][y].getBadger().caught = true;
